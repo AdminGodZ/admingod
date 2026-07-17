@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   description:
     "Portfolio of AdminGod, focused on practical full-stack engineering, automation, and polished web interfaces.",
   icons: {
-    icon: "/admingod_dark_transparent.png",
-    shortcut: "/admingod_dark_transparent.png",
-    apple: "/admingod_dark_transparent.png",
+    icon: "/admingod_white_transparent.png",
+    shortcut: "/admingod_white_transparent.png",
+    apple: "/admingod_white_transparent.png",
   },
   openGraph: {
     title: "AdminGod - Portfolio",

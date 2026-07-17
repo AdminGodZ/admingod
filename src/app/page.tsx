@@ -1,16 +1,22 @@
 import {
-  ArrowDown,
+  ArrowUp,
   ArrowUpRight,
-  Code2,
   Mail,
-  ShieldCheck,
-  TerminalSquare,
 } from "lucide-react";
 import Image from "next/image";
-import CipherText from "./components/cipher-text";
+import {
+  siLinux,
+  siNextdotjs,
+  siNodedotjs,
+  siRailway,
+  siReact,
+  siRust,
+  siTailwindcss,
+  siTypescript,
+} from "simple-icons";
+import { HeroTextReveal } from "./components/hero-text-reveal";
 import ScrollSidebar from "./components/scroll-sidebar";
 import VoidParticleField from "./components/void-particle-field";
-import VoidPortalButton from "./components/void-portal-button";
 
 const projects = [
   {
@@ -32,42 +38,25 @@ const projects = [
     href: "https://github.com/AdminGodZ/AetherZ",
   },
   {
-    name: "Under Construction",
-    type: "In progress",
+    name: "Aeralyth",
+    type: "Self-hosted cloud",
     description:
-      "A third project is currently being built and will be added here once it is ready to show properly.",
-    meta: "Coming Soon",
-    image: "/under_construction_transparent.png",
-  },
-];
-
-const capabilities = [
-  {
-    icon: Code2,
-    title: "Product UI",
-    copy: "Interfaces that stay quiet, usable, and sharp under real repeated use.",
-  },
-  {
-    icon: TerminalSquare,
-    title: "Practical Automation",
-    copy: "Small tools, scripts, and workflows that remove manual steps instead of adding ceremonies.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Security Awareness",
-    copy: "Engineering choices that account for failure modes, permissions, and operational behavior.",
+      "A self-hosted cloud platform with encrypted vaults, file permissions, and storage backed by a Next.js frontend and Actix Web backend.",
+    meta: "Next.js / Actix Web",
+    image: "/aeralyth_transparent.png",
+    href: "https://github.com/AdminGodZ/Aeralyth",
   },
 ];
 
 const stack = [
-  "Next.js",
-  "React",
-  "TypeScript",
-  "Tailwind CSS",
-  "Node.js",
-  "Rust",
-  "Python",
-  "Linux",
+  { name: "Next.js", type: "Framework", icon: siNextdotjs },
+  { name: "React", type: "UI library", icon: siReact },
+  { name: "TypeScript", type: "Language", icon: siTypescript },
+  { name: "Tailwind CSS", type: "Styling", icon: siTailwindcss },
+  { name: "Node.js", type: "Runtime", icon: siNodedotjs },
+  { name: "Rust", type: "Language", icon: siRust },
+  { name: "Railway", type: "Cloud platform", icon: siRailway },
+  { name: "Linux", type: "Platform", icon: siLinux },
 ];
 
 function GitHubIcon({ className }: { className?: string }) {
@@ -90,7 +79,10 @@ function GitHubIcon({ className }: { className?: string }) {
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <main
+      id="top"
+      className="min-h-screen overflow-hidden bg-background text-foreground"
+    >
       <ScrollSidebar />
 
       <section className="relative flex min-h-[100svh] items-center overflow-hidden px-5 py-8 sm:px-8 lg:px-12">
@@ -101,40 +93,34 @@ export default function Home() {
         <div className="void-portal pointer-events-none absolute inset-x-0 bottom-0 h-[48vh]" />
         <div className="void-portal-fade pointer-events-none absolute inset-x-0 bottom-0 h-[42vh]" />
 
-        <Image
-          src="/admingod_dark_transparent.png"
-          alt="AdminGod logo"
-          width={900}
-          height={900}
-          priority
-          draggable={false}
-          sizes="(min-width: 1280px) 760px, (min-width: 1024px) 58vw, 88vw"
-          className="pointer-events-none absolute right-[-12vw] bottom-[4vh] z-[4] hidden h-[88vh] w-auto max-w-none select-none object-contain opacity-95 drop-shadow-[0_38px_54px_rgba(0,0,0,0.22)] lg:block xl:right-[-6vw]"
-        />
+        <aside className="pointer-events-none absolute inset-y-0 right-[2vw] left-[58%] z-[4] hidden items-center justify-center lg:flex">
+          <Image
+            src="/admingod_dark_transparent.png"
+            alt="AdminGod logo"
+            width={900}
+            height={900}
+            priority
+            draggable={false}
+            sizes="44vw"
+            className="h-auto w-[min(44vw,880px)] select-none object-contain opacity-95 drop-shadow-[0_38px_54px_rgba(0,0,0,0.22)]"
+          />
+        </aside>
 
         <div className="relative z-10 mx-auto grid w-full max-w-7xl -translate-y-6 gap-10 lg:grid-cols-[minmax(0,0.56fr)_minmax(360px,0.44fr)] lg:items-center xl:-translate-y-8">
           <div className="max-w-[740px] pt-12 sm:pt-16 lg:pt-0">
-            <div className="mb-8 inline-flex max-w-full items-center gap-3 border border-black/10 bg-white/58 px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-black/58 backdrop-blur-md">
-              <span className="font-mono text-black/36">{"//"}</span>
-              <CipherText text="Developer - Systems Engineer - Privacy Enthusiast" />
-            </div>
-
-            <h1 className="max-w-4xl text-[clamp(4rem,10vw,9rem)] font-black leading-[0.84] tracking-normal text-[#0c0c0c]">
-              AdminGod
-            </h1>
-            <p className="mt-8 max-w-2xl text-xl leading-8 text-black/68 sm:text-2xl sm:leading-9">
-              I build private systems, intelligent tools, and clean digital
-              experiences with code that stays understandable after the first
-              version ships.
-            </p>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <HeroTextReveal
+              title="AdminGod"
+              description="I love building software and hosting it myself."
+              titleClassName="max-w-4xl text-[clamp(4rem,10vw,9rem)] font-black leading-[0.84] tracking-normal text-[#0c0c0c]"
+              descriptionClassName="mt-8 max-w-2xl text-xl leading-8 text-black/68 sm:text-2xl sm:leading-9"
+              actionsClassName="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+            >
               <button
                 type="button"
                 className="inline-flex h-12 select-none items-center justify-center gap-2 border border-black bg-black px-5 text-sm font-semibold text-white transition-colors hover:bg-[#242424]"
               >
-                Contact me
                 <Mail className="h-4 w-4" aria-hidden="true" />
+                Contact me
               </button>
               <a
                 href="https://github.com/AdminGodZ"
@@ -146,7 +132,7 @@ export default function Home() {
                 GitHub
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </a>
-            </div>
+            </HeroTextReveal>
           </div>
 
           <aside className="relative z-[5] flex justify-center pb-20 lg:hidden">
@@ -163,34 +149,22 @@ export default function Home() {
           </aside>
         </div>
 
-        <div className="void-portal-actions absolute bottom-8 left-1/2 z-20 -translate-x-1/2">
-          <VoidPortalButton targetId="work" ariaLabel="Scroll to selected work">
-            <ArrowDown className="h-5 w-5" aria-hidden="true" />
-          </VoidPortalButton>
-        </div>
+        <div
+          className="hero-section-dissolve pointer-events-none absolute inset-x-0 bottom-0 z-[6] h-[30vh]"
+          aria-hidden="true"
+        />
       </section>
 
       <section
         id="work"
-        className="border-t border-black/8 bg-background px-5 py-24 text-foreground sm:px-8 lg:px-12"
+        className="relative z-[7] -mt-10 px-5 pt-12 pb-24 text-foreground sm:px-8 lg:px-12"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 flex-1 items-center gap-5">
-              <p className="shrink-0 font-mono text-sm font-black uppercase tracking-[0.34em] text-black/76">
-                Built projects
-              </p>
-              <div className="h-px flex-1 bg-black/10" />
-            </div>
-            <a
-              href="https://github.com/AdminGodZ"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex select-none items-center gap-2 font-mono text-xs font-black uppercase tracking-[0.2em] text-black/72 transition-colors hover:text-black"
-            >
-              View all projects
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </a>
+          <div className="mb-8 flex items-center gap-5">
+            <h2 className="shrink-0 text-lg font-semibold text-black/76">
+              Built projects
+            </h2>
+            <div className="h-px flex-1 bg-black/10" />
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">
@@ -205,7 +179,7 @@ export default function Home() {
                       fill
                       draggable={false}
                       sizes="(min-width: 1024px) 33vw, 100vw"
-                      className="project-card-image pointer-events-none select-none object-cover opacity-[0.92]"
+                      className="project-card-image project-card-image-uniform pointer-events-none select-none opacity-[0.92]"
                     />
                   ) : null}
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)]" />
@@ -259,64 +233,122 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-black/8 bg-background px-5 py-24 sm:px-8 lg:px-12">
+      <section
+        id="stack"
+        className="border-t border-black/8 bg-background px-5 py-24 sm:px-8 lg:px-12"
+      >
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-4 md:grid-cols-3">
-            {capabilities.map((capability) => {
-              const Icon = capability.icon;
-
-              return (
-                <article
-                  key={capability.title}
-                  className="border border-black/10 bg-white p-6"
-                >
-                  <Icon className="h-6 w-6 text-black/72" aria-hidden="true" />
-                  <h3 className="mt-8 text-xl font-bold">{capability.title}</h3>
-                  <p className="mt-3 leading-7 text-black/62">
-                    {capability.copy}
-                  </p>
-                </article>
-              );
-            })}
+          <div className="mb-8 flex items-center gap-5">
+            <h2 className="shrink-0 text-lg font-semibold text-black/76">
+              Tools I work with
+            </h2>
+            <div className="h-px flex-1 bg-black/10" />
           </div>
 
-          <div className="mt-14 grid gap-8 border-t border-black/10 pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-start">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-black/42">
-                Stack
-              </p>
-              <h2 className="mt-4 max-w-3xl text-4xl font-black leading-tight tracking-normal sm:text-5xl">
-                The toolset changes. The taste for simple systems stays.
-              </h2>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {stack.map((item) => (
-                <span
-                  key={item}
-                  className="border border-black/10 bg-white px-3 py-2 font-mono text-xs uppercase tracking-[0.14em] text-black/62"
+          <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {stack.map((item) => (
+              <li
+                key={item.name}
+                className="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-lg border border-black/8 bg-white p-5 shadow-[0_18px_38px_rgba(0,0,0,0.06)] ring-1 ring-white/80 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black/16 hover:shadow-[0_24px_46px_rgba(0,0,0,0.1)]"
+              >
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0)_36%,rgba(0,0,0,0.035)_100%)]" />
+                <svg
+                  viewBox="0 0 24 24"
+                  className="pointer-events-none absolute -top-7 -right-7 h-32 w-32 fill-current text-black/[0.035] transition-transform duration-500 group-hover:scale-110"
+                  aria-hidden="true"
                 >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
+                  <path d={item.icon.path} />
+                </svg>
+
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-md border border-black/8 bg-black/[0.025]">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-8 w-8 fill-current text-black/78"
+                    aria-hidden="true"
+                  >
+                    <path d={item.icon.path} />
+                  </svg>
+                </div>
+
+                <div className="relative mt-8">
+                  <h3 className="text-lg font-bold text-black">{item.name}</h3>
+                  <p className="mt-1 text-sm text-black/60">{item.type}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
-      <footer className="border-t border-black/12 bg-background px-5 py-10 text-foreground sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-black/40">
-            AdminGod / Portfolio
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://github.com/AdminGodZ"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex select-none items-center gap-2 text-sm font-semibold text-black/68 transition-colors hover:text-black"
+      <footer className="border-t border-black bg-[#0d0d0d] px-5 py-14 text-white sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+            <div className="max-w-lg">
+              <p className="text-2xl font-bold">AdminGod</p>
+              <p className="mt-4 max-w-md leading-7 text-white/65">
+                Selected software projects and the tools I use to build them.
+              </p>
+            </div>
+
+            <nav
+              aria-label="Footer navigation"
+              className="grid grid-cols-2 gap-x-12 gap-y-8 sm:gap-x-20"
             >
-              GitHub
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+                  Explore
+                </p>
+                <div className="mt-4 flex flex-col gap-3">
+                  <a
+                    href="#work"
+                    className="text-sm font-semibold text-white/70 transition-colors hover:text-white"
+                  >
+                    Projects
+                  </a>
+                  <a
+                    href="#stack"
+                    className="text-sm font-semibold text-white/70 transition-colors hover:text-white"
+                  >
+                    Tools
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+                  Connect
+                </p>
+                <div className="mt-4 flex flex-col gap-3">
+                  <a
+                    href="https://github.com/AdminGodZ"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 transition-colors hover:text-white"
+                  >
+                    GitHub
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                  <a
+                    href="https://github.com/AdminGodZ/admingod"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 transition-colors hover:text-white"
+                  >
+                    Site source
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+            </nav>
+          </div>
+
+          <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
+            <p>© 2026 AdminGod</p>
+            <a
+              href="#top"
+              className="inline-flex items-center gap-2 font-semibold text-white/65 transition-colors hover:text-white"
+            >
+              Back to top
+              <ArrowUp className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
         </div>
