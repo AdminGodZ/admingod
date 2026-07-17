@@ -2,7 +2,6 @@ import {
   ArrowDown,
   ArrowUpRight,
   Code2,
-  Github,
   Mail,
   ShieldCheck,
   TerminalSquare,
@@ -71,6 +70,24 @@ const stack = [
   "Linux",
 ];
 
+function GitHubIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.28-.36 6.72-1.61 6.72-7.25a5.65 5.65 0 0 0-1.5-3.95 5.4 5.4 0 0 0-.14-2.95S17.9 0 15.18 1.85a13.38 13.38 0 0 0-7 0C5.46 0 4.28.35 4.28.35a5.4 5.4 0 0 0-.14 2.95 5.65 5.65 0 0 0-1.5 3.95c0 5.63 3.44 6.88 6.72 7.25A4.8 4.8 0 0 0 8 18v4" />
+      <path d="M8 19c-3 .9-3-2-4-2" />
+    </svg>
+  );
+}
+
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
@@ -125,7 +142,7 @@ export default function Home() {
                 rel="noreferrer"
                 className="inline-flex h-12 select-none items-center justify-center gap-2 border border-black/12 bg-white/60 px-5 text-sm font-semibold text-black backdrop-blur-md transition-colors hover:border-black/25 hover:bg-white"
               >
-                <Github className="h-4 w-4" aria-hidden="true" />
+                <GitHubIcon className="h-4 w-4" />
                 GitHub
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </a>
