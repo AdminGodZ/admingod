@@ -1,0 +1,40 @@
+---
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title = "AdminGod - Portfolio",
+  description = "Portfolio of AdminGod, focused on practical full-stack engineering, automation, and polished web interfaces.",
+  noIndex = false,
+} = Astro.props;
+
+const openGraphDescription =
+  "Practical full-stack engineering, automation, and polished web interfaces.";
+---
+
+<!doctype html>
+<html lang="en" class="font-sans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/admingod_white_transparent.png" />
+    <link rel="shortcut icon" href="/admingod_white_transparent.png" />
+    <link rel="apple-touch-icon" href="/admingod_white_transparent.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={openGraphDescription} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={openGraphDescription} />
+  </head>
+  <body class="antialiased">
+    <slot />
+  </body>
+</html>
