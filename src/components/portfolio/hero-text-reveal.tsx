@@ -5,19 +5,38 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type HeroTextRevealProps = {
+  eyebrow?: string;
   title: string;
   description: string;
+  eyebrowClassName?: string;
   titleClassName?: string;
   descriptionClassName?: string;
   actionsClassName?: string;
   children: ReactNode;
 };
 
+const eyebrowVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 10,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 const titleContainerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      delayChildren: 0.08,
+      delayChildren: 0.18,
       staggerChildren: 0.045,
     },
   },
@@ -80,8 +99,10 @@ const actionsVariants: Variants = {
 };
 
 export function HeroTextReveal({
+  eyebrow,
   title,
   description,
+  eyebrowClassName,
   titleClassName,
   descriptionClassName,
   actionsClassName,
@@ -94,6 +115,31 @@ export function HeroTextReveal({
 
   return (
     <>
+      {eyebrow ? (
+        <motion.div
+          initial={initial}
+          animate="visible"
+          variants={eyebrowVariants}
+          className={cn(
+            "hero-reveal-eyebrow mb-5 inline-flex items-center gap-2.5 text-base font-semibold tracking-[0.04em] text-black/58 sm:text-lg",
+            eyebrowClassName,
+          )}
+        >
+          <span
+            className="h-px w-7 bg-black/20"
+            aria-hidden="true"
+          />
+          <span>{eyebrow}</span>
+          <span
+            className="hero-wave inline-block select-none text-base [filter:grayscale(1)] sm:text-lg"
+            role="img"
+            aria-label="Waving hand"
+          >
+            👋
+          </span>
+        </motion.div>
+      ) : null}
+
       <motion.h1
         initial={initial}
         animate="visible"

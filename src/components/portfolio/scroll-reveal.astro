@@ -1,0 +1,52 @@
+<script>
+  const revealItems = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"),
+  );
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    revealItems.forEach((item) => {
+      item.classList.add("scroll-reveal-pending");
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          const item = entry.target as HTMLElement;
+          const finishReveal = (event: AnimationEvent) => {
+            if (
+              event.target !== item ||
+              event.animationName !== "scroll-reveal-in"
+            ) {
+              return;
+            }
+
+            item.classList.remove(
+              "scroll-reveal-pending",
+              "scroll-reveal-visible",
+            );
+            item.removeEventListener("animationend", finishReveal);
+          };
+
+          item.addEventListener("animationend", finishReveal);
+          item.classList.add("scroll-reveal-visible");
+          observer.unobserve(item);
+        });
+      },
+      {
+        rootMargin: "0px 0px -9% 0px",
+        threshold: 0.12,
+      },
+    );
+
+    revealItems.forEach((item) => {
+      observer.observe(item);
+    });
+  }
+</script>

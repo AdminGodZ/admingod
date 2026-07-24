@@ -20,7 +20,9 @@ import adminSearchImage from "@/assets/adminsearch_transparent.png";
 import aeralythImage from "@/assets/aeralyth_transparent.png";
 import aetherzImage from "@/assets/aetherz_transparent.png";
 import { HeroTextReveal } from "@/components/portfolio/hero-text-reveal";
+import ScrollReveal from "@/components/portfolio/scroll-reveal.astro";
 import ScrollSidebar from "@/components/portfolio/scroll-sidebar";
+import VoidParticleTransition from "@/components/portfolio/void-particle-transition.astro";
 import VoidParticleField from "@/components/portfolio/void-particle-field";
 import Layout from "@/layouts/layout.astro";
 
@@ -70,10 +72,8 @@ const stack = [
 ---
 
 <Layout>
-    <main
-      id="top"
-      class="min-h-screen overflow-hidden bg-background text-foreground"
-    >
+    <main class="min-h-screen overflow-hidden bg-background text-foreground">
+      <ScrollReveal />
       <ScrollSidebar client:load />
 
       <section class="relative flex min-h-[100svh] items-center overflow-hidden px-5 py-8 sm:px-8 lg:px-12">
@@ -108,19 +108,20 @@ const stack = [
           <div class="max-w-[740px] pt-12 sm:pt-16 lg:pt-0">
             <HeroTextReveal
               client:load
+              eyebrow="Hi there, I call myself"
               title="AdminGod"
-              description="I love building software and hosting it myself."
+              description="and I love building software and hosting it myself."
               titleClassName="max-w-4xl text-[clamp(4rem,10vw,9rem)] font-black leading-[0.84] tracking-normal text-[#0c0c0c]"
               descriptionClassName="mt-8 max-w-2xl text-xl leading-8 text-black/68 sm:text-2xl sm:leading-9"
               actionsClassName="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
-              <button
-                type="button"
+              <a
+                href="/contact"
                 class="inline-flex h-12 select-none items-center justify-center gap-2 border border-black bg-black px-5 text-sm font-semibold text-white transition-colors hover:bg-[#242424]"
               >
                 <Mail className="h-4 w-4" aria-hidden="true" />
                 Contact me
-              </button>
+              </a>
               <a
                 href="https://github.com/AdminGodZ"
                 target="_blank"
@@ -168,6 +169,7 @@ const stack = [
           class="hero-section-dissolve pointer-events-none absolute inset-x-0 bottom-0 z-[6] h-[30vh]"
           aria-hidden="true"
         />
+        <VoidParticleTransition />
       </section>
 
       <section
@@ -175,7 +177,10 @@ const stack = [
         class="relative z-[7] -mt-10 px-5 pt-12 pb-24 text-foreground sm:px-8 lg:px-12"
       >
         <div class="mx-auto max-w-7xl">
-          <div class="mb-8 flex items-center gap-5">
+          <div
+            data-scroll-reveal="heading"
+            class="mb-8 flex items-center gap-5"
+          >
             <h2 class="shrink-0 text-lg font-semibold text-black/76">
               Built projects
             </h2>
@@ -183,8 +188,9 @@ const stack = [
           </div>
 
           <div class="grid gap-5 lg:grid-cols-3">
-            {projects.map((project) => {
+            {projects.map((project, index) => {
               const cardClassName = `project-card group relative flex min-h-[230px] overflow-hidden rounded-lg border border-black/8 bg-white p-6 text-left no-underline shadow-[0_18px_38px_rgba(0,0,0,0.08)] ring-1 ring-white/80 sm:min-h-[260px] ${project.href ? "cursor-pointer" : ""}`;
+              const revealStyle = `--scroll-reveal-delay: ${index * 90}ms`;
               const cardContent = (
                 <>
                   {project.image ? (
@@ -205,7 +211,7 @@ const stack = [
                   <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90" />
                   <div class="relative z-10 mt-auto flex w-full items-end justify-between gap-5">
                     <div>
-                      <h3 class="text-2xl font-black uppercase tracking-[0.18em] text-black">
+                      <h3 class="text-3xl font-black tracking-tight text-black">
                         {project.name}
                       </h3>
                       {project.name !== "Under Construction" ? (
@@ -233,6 +239,8 @@ const stack = [
                     href={project.href}
                     target="_blank"
                     rel="noreferrer"
+                    data-scroll-reveal="card"
+                    style={revealStyle}
                     class={cardClassName}
                     aria-label={`Open ${project.name} on GitHub`}
                   >
@@ -242,7 +250,11 @@ const stack = [
               }
 
               return (
-                <article class={cardClassName}>
+                <article
+                  data-scroll-reveal="card"
+                  style={revealStyle}
+                  class={cardClassName}
+                >
                   {cardContent}
                 </article>
               );
@@ -256,7 +268,10 @@ const stack = [
         class="border-t border-black/8 bg-background px-5 py-24 sm:px-8 lg:px-12"
       >
         <div class="mx-auto max-w-7xl">
-          <div class="mb-8 flex items-center gap-5">
+          <div
+            data-scroll-reveal="heading"
+            class="mb-8 flex items-center gap-5"
+          >
             <h2 class="shrink-0 text-lg font-semibold text-black/76">
               Tools I work with
             </h2>
@@ -264,8 +279,10 @@ const stack = [
           </div>
 
           <ul class="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {stack.map((item) => (
+            {stack.map((item, index) => (
               <li
+                data-scroll-reveal="card"
+                style={`--scroll-reveal-delay: ${(index % 4) * 70}ms`}
                 class="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-lg border border-black/8 bg-white p-5 shadow-[0_18px_38px_rgba(0,0,0,0.06)] ring-1 ring-white/80 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black/16 hover:shadow-[0_24px_46px_rgba(0,0,0,0.1)]"
               >
                 <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0)_36%,rgba(0,0,0,0.035)_100%)]" />
@@ -299,7 +316,7 @@ const stack = [
       <footer class="border-t border-black bg-[#0d0d0d] px-5 py-14 text-white sm:px-8 lg:px-12">
         <div class="mx-auto max-w-7xl">
           <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
-            <div class="max-w-lg">
+            <div data-scroll-reveal="footer" class="max-w-lg">
               <p class="text-2xl font-bold">AdminGod</p>
               <p class="mt-4 max-w-md leading-7 text-white/65">
                 Selected software projects and the tools I use to build them.
@@ -310,8 +327,11 @@ const stack = [
               aria-label="Footer navigation"
               class="grid grid-cols-2 gap-x-12 gap-y-8 sm:gap-x-20"
             >
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+              <div
+                data-scroll-reveal="footer"
+                style="--scroll-reveal-delay: 90ms"
+              >
+                <p class="text-sm font-medium text-white/50">
                   Explore
                 </p>
                 <div class="mt-4 flex flex-col gap-3">
@@ -330,8 +350,11 @@ const stack = [
                 </div>
               </div>
 
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+              <div
+                data-scroll-reveal="footer"
+                style="--scroll-reveal-delay: 180ms"
+              >
+                <p class="text-sm font-medium text-white/50">
                   Connect
                 </p>
                 <div class="mt-4 flex flex-col gap-3">
@@ -358,10 +381,14 @@ const stack = [
             </nav>
           </div>
 
-          <div class="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
+          <div
+            data-scroll-reveal="footer"
+            style="--scroll-reveal-delay: 120ms"
+            class="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between"
+          >
             <p>© 2026 AdminGod</p>
             <a
-              href="#top"
+              href="/"
               class="inline-flex items-center gap-2 font-semibold text-white/65 transition-colors hover:text-white"
             >
               Back to top

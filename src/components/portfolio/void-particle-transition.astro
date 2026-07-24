@@ -1,0 +1,233 @@
+---
+const createRandom = (seed: number) => {
+  let value = seed;
+
+  return () => {
+    value = (value + 0x6d2b79f5) | 0;
+    let result = Math.imul(value ^ (value >>> 15), 1 | value);
+    result ^= result + Math.imul(result ^ (result >>> 7), 61 | result);
+    return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const random = createRandom(0x6a09e667);
+
+const particles = Array.from({ length: 112 }, (_, index) => {
+  const nearCenter = random() < 0.16;
+  const side = random() < 0.5 ? -1 : 1;
+  const edgeOffset = random() ** 0.38 * 49;
+  const x = nearCenter
+    ? 43 + random() * 14
+    : 50 + side * edgeOffset;
+  const duration = 5.8 + random() * 6.4;
+
+  return {
+    x,
+    y: 14 + random() ** 0.7 * 72,
+    size: 0.75 + random() * 2.15,
+    alpha: 0.16 + random() * 0.5,
+    duration,
+    delay: -random() * duration,
+    driftX: (random() - 0.5) * 42,
+    driftY: -(22 + random() * 44),
+    blur: random() > 0.76 ? 0.7 + random() * 1.1 : 0,
+    rotation: (random() - 0.5) * 110,
+    streak: index % 11 === 0 || index % 17 === 0,
+  };
+});
+---
+
+<div class="void-particle-transition" aria-hidden="true">
+  <div class="void-particle-transition__depth"></div>
+
+  <div class="void-particle-transition__field">
+    {
+      particles.map((particle) => (
+        <span
+          class:list={[
+            "void-particle-transition__particle",
+            {
+              "void-particle-transition__particle--streak": particle.streak,
+            },
+          ]}
+          style={`--particle-x:${particle.x.toFixed(2)}%;--particle-y:${particle.y.toFixed(2)}%;--particle-size:${particle.size.toFixed(2)}px;--particle-alpha:${particle.alpha.toFixed(2)};--particle-duration:${particle.duration.toFixed(2)}s;--particle-delay:${particle.delay.toFixed(2)}s;--particle-drift-x:${particle.driftX.toFixed(2)}px;--particle-drift-y:${particle.driftY.toFixed(2)}px;--particle-blur:${particle.blur.toFixed(2)}px;--particle-rotation:${particle.rotation.toFixed(2)}deg;`}
+        />
+      ))
+    }
+  </div>
+
+  <div class="void-particle-transition__wash"></div>
+</div>
+
+<style>
+  .void-particle-transition {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 8;
+    height: clamp(120px, 15vw, 190px);
+    overflow: hidden;
+    pointer-events: none;
+    contain: layout paint;
+    isolation: isolate;
+  }
+
+  @supports (height: 100svh) {
+    .void-particle-transition {
+      bottom: max(0px, calc(100% - 100svh));
+    }
+  }
+
+  .void-particle-transition__depth {
+    position: absolute;
+    z-index: 1;
+    inset: 28% -4% 2%;
+    background:
+      radial-gradient(
+        ellipse 18% 54% at 8% 64%,
+        rgb(0 0 0 / 9%),
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 23% 60% at 35% 61%,
+        rgb(0 0 0 / 7%),
+        transparent 74%
+      ),
+      radial-gradient(
+        ellipse 22% 58% at 68% 63%,
+        rgb(0 0 0 / 8%),
+        transparent 74%
+      ),
+      radial-gradient(
+        ellipse 17% 52% at 93% 65%,
+        rgb(0 0 0 / 8%),
+        transparent 72%
+      );
+    filter: blur(16px);
+    opacity: 0.68;
+    animation: void-transition-depth 9s ease-in-out infinite;
+  }
+
+  .void-particle-transition__field {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 18%,
+      #000 68%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 18%,
+      #000 68%,
+      transparent 100%
+    );
+  }
+
+  .void-particle-transition__particle {
+    position: absolute;
+    top: var(--particle-y);
+    left: var(--particle-x);
+    width: var(--particle-size);
+    height: var(--particle-size);
+    background: rgb(18 18 18);
+    box-shadow: 0 0 6px rgb(0 0 0 / 32%);
+    filter: blur(var(--particle-blur));
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.65);
+    animation: void-transition-particle var(--particle-duration) linear
+      var(--particle-delay) infinite;
+  }
+
+  .void-particle-transition__particle--streak {
+    width: calc(var(--particle-size) * 2.8);
+    height: max(1px, calc(var(--particle-size) * 0.46));
+    border-radius: 999px;
+  }
+
+  .void-particle-transition__wash {
+    position: absolute;
+    z-index: 3;
+    inset: auto 0 0;
+    height: 58%;
+    background: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0%) 0%,
+      rgb(255 255 255 / 42%) 54%,
+      #ffffff 100%
+    );
+  }
+
+  @keyframes void-transition-particle {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 18px, 0) rotate(0deg) scale(0.65);
+    }
+
+    15% {
+      opacity: var(--particle-alpha);
+    }
+
+    66% {
+      opacity: var(--particle-alpha);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(
+          var(--particle-drift-x),
+          var(--particle-drift-y),
+          0
+        )
+        rotate(var(--particle-rotation)) scale(1.16);
+    }
+  }
+
+  @keyframes void-transition-depth {
+    0%,
+    100% {
+      opacity: 0.52;
+      transform: scaleY(0.88);
+    }
+
+    50% {
+      opacity: 0.72;
+      transform: scaleY(1.08);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .void-particle-transition {
+      height: 126px;
+    }
+
+    .void-particle-transition__particle:nth-child(3n) {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .void-particle-transition__depth,
+    .void-particle-transition__particle {
+      animation: none;
+    }
+
+    .void-particle-transition__depth {
+      opacity: 0.56;
+    }
+
+    .void-particle-transition__particle {
+      opacity: 0.22;
+      transform: none;
+    }
+
+    .void-particle-transition__particle:nth-child(2n) {
+      display: none;
+    }
+  }
+</style>

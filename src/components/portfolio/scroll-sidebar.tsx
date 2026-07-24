@@ -1,13 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type PointerEvent as ReactPointerEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const TRACK_MARGIN = 6;
 const VISIBILITY_TIMEOUT_MS = 900;
 
 type SidebarState = {
-  thumbHeightPercent: number;
-  thumbTranslateY: number;
   visible: boolean;
   dragging: boolean;
   hovering: boolean;
@@ -53,20 +57,37 @@ function getScrollMetrics(): ScrollMetrics {
 
 export default function ScrollSidebar() {
   const [state, setState] = useState<SidebarState>({
-    thumbHeightPercent: 2.6,
-    thumbTranslateY: 0,
     visible: false,
     dragging: false,
     hovering: false,
     active: false,
   });
-  const dragStartY = useRef(0);
-  const dragStartThumbY = useRef(0);
+  const thumbRef = useRef<HTMLButtonElement | null>(null);
   const metricsRef = useRef<ScrollMetrics | null>(null);
+  const draggingRef = useRef(false);
+  const activePointerIdRef = useRef<number | null>(null);
+  const dragStartYRef = useRef(0);
+  const dragStartThumbYRef = useRef(0);
+  const latestPointerYRef = useRef(0);
+  const dragFrameRef = useRef(0);
   const hideTimerRef = useRef<number | null>(null);
+  const previousUserSelectRef = useRef("");
+  const previousWebkitUserSelectRef = useRef("");
+  const previousScrollBehaviorRef = useRef("");
+
+  const applyThumbMetrics = useCallback((metrics: ScrollMetrics) => {
+    metricsRef.current = metrics;
+
+    if (!thumbRef.current) {
+      return;
+    }
+
+    thumbRef.current.style.height = `${metrics.thumbHeightPercent}%`;
+    thumbRef.current.style.transform = `translateY(${metrics.thumbTranslateY}px)`;
+  }, []);
 
   const clearHideTimer = useCallback(() => {
-    if (hideTimerRef.current) {
+    if (hideTimerRef.current !== null) {
       window.clearTimeout(hideTimerRef.current);
       hideTimerRef.current = null;
     }
@@ -76,7 +97,7 @@ export default function ScrollSidebar() {
     clearHideTimer();
     hideTimerRef.current = window.setTimeout(() => {
       setState((current) => {
-        if (current.dragging || current.hovering) {
+        if (current.dragging || current.hovering || !current.active) {
           return current;
         }
 
@@ -88,33 +109,55 @@ export default function ScrollSidebar() {
     }, VISIBILITY_TIMEOUT_MS);
   }, [clearHideTimer]);
 
+  const restoreDragStyles = useCallback(() => {
+    document.body.style.userSelect = previousUserSelectRef.current;
+    document.body.style.webkitUserSelect =
+      previousWebkitUserSelectRef.current;
+    document.documentElement.style.scrollBehavior =
+      previousScrollBehaviorRef.current;
+  }, []);
+
   useEffect(() => {
-    let frame = 0;
+    let updateFrame = 0;
 
     const update = () => {
       const metrics = getScrollMetrics();
-      metricsRef.current = metrics;
-      setState((current) => ({
-        ...current,
-        thumbHeightPercent: metrics.thumbHeightPercent,
-        thumbTranslateY: metrics.thumbTranslateY,
-        visible: metrics.visible,
-      }));
-      frame = 0;
+      applyThumbMetrics(metrics);
+      setState((current) => {
+        if (current.visible === metrics.visible) {
+          return current;
+        }
+
+        return {
+          ...current,
+          visible: metrics.visible,
+        };
+      });
+      updateFrame = 0;
     };
 
     const requestUpdate = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(update);
+      if (updateFrame || draggingRef.current) {
+        return;
+      }
+
+      updateFrame = window.requestAnimationFrame(update);
     };
 
     const handleScroll = () => {
-      setState((current) => ({
-        ...current,
-        active: true,
-      }));
-      scheduleHide();
-      requestUpdate();
+      setState((current) =>
+        current.active
+          ? current
+          : {
+              ...current,
+              active: true,
+            },
+      );
+
+      if (!draggingRef.current) {
+        scheduleHide();
+        requestUpdate();
+      }
     };
 
     requestUpdate();
@@ -125,101 +168,147 @@ export default function ScrollSidebar() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", requestUpdate);
       clearHideTimer();
-      if (frame) {
-        window.cancelAnimationFrame(frame);
+      restoreDragStyles();
+
+      if (updateFrame) {
+        window.cancelAnimationFrame(updateFrame);
+      }
+
+      if (dragFrameRef.current) {
+        window.cancelAnimationFrame(dragFrameRef.current);
       }
     };
-  }, [clearHideTimer, scheduleHide]);
+  }, [
+    applyThumbMetrics,
+    clearHideTimer,
+    restoreDragStyles,
+    scheduleHide,
+  ]);
 
-  useEffect(() => {
-    if (!state.dragging) return;
+  const applyDragPosition = useCallback(() => {
+    dragFrameRef.current = 0;
 
-    const previousUserSelect = document.body.style.userSelect;
-    const previousWebkitUserSelect = document.body.style.webkitUserSelect;
-    document.body.style.userSelect = "none";
-    document.body.style.webkitUserSelect = "none";
+    const metrics = metricsRef.current ?? getScrollMetrics();
+    const maxTrackY = Math.max(
+      0,
+      metrics.viewportHeight - TRACK_MARGIN * 2 - metrics.thumbHeightPx,
+    );
+    const deltaY = latestPointerYRef.current - dragStartYRef.current;
+    const nextThumbY = Math.min(
+      TRACK_MARGIN + maxTrackY,
+      Math.max(TRACK_MARGIN, dragStartThumbYRef.current + deltaY),
+    );
+    const progress =
+      maxTrackY > 0 ? (nextThumbY - TRACK_MARGIN) / maxTrackY : 0;
 
-    const onPointerMove = (event: PointerEvent) => {
-      event.preventDefault();
+    if (thumbRef.current) {
+      thumbRef.current.style.transform = `translateY(${nextThumbY}px)`;
+    }
 
-      const metrics = metricsRef.current ?? getScrollMetrics();
-      metricsRef.current = metrics;
+    window.scrollTo(0, progress * metrics.scrollable);
+  }, []);
 
-      const maxTrackY = Math.max(
-        0,
-        metrics.viewportHeight - TRACK_MARGIN * 2 - metrics.thumbHeightPx,
-      );
-      const deltaY = event.clientY - dragStartY.current;
-      const nextThumbY = Math.min(
-        TRACK_MARGIN + maxTrackY,
-        Math.max(TRACK_MARGIN, dragStartThumbY.current + deltaY),
-      );
+  const handlePointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) {
+      return;
+    }
 
-      const progress =
-        maxTrackY > 0 ? (nextThumbY - TRACK_MARGIN) / maxTrackY : 0;
-      const nextScrollTop = progress * metrics.scrollable;
-      window.scrollTo({ top: nextScrollTop, behavior: "auto" });
-
-      setState((current) => ({
-        ...current,
-        thumbTranslateY: nextThumbY,
-      }));
-    };
-
-    const onPointerUp = () => {
-      setState((current) => ({
-        ...current,
-        dragging: false,
-        active: true,
-      }));
-      scheduleHide();
-    };
-
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp, { once: true });
-    window.addEventListener("pointercancel", onPointerUp, { once: true });
-
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("pointercancel", onPointerUp);
-      document.body.style.userSelect = previousUserSelect;
-      document.body.style.webkitUserSelect = previousWebkitUserSelect;
-    };
-  }, [state.dragging, scheduleHide]);
-
-  const handlePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
     clearHideTimer();
 
     const metrics = getScrollMetrics();
-    metricsRef.current = metrics;
-    dragStartY.current = event.clientY;
-    dragStartThumbY.current = metrics.thumbTranslateY;
+    applyThumbMetrics(metrics);
+    draggingRef.current = true;
+    activePointerIdRef.current = event.pointerId;
+    dragStartYRef.current = event.clientY;
+    latestPointerYRef.current = event.clientY;
+    dragStartThumbYRef.current = metrics.thumbTranslateY;
+    previousUserSelectRef.current = document.body.style.userSelect;
+    previousWebkitUserSelectRef.current =
+      document.body.style.webkitUserSelect;
+    previousScrollBehaviorRef.current =
+      document.documentElement.style.scrollBehavior;
+    document.body.style.userSelect = "none";
+    document.body.style.webkitUserSelect = "none";
+    document.documentElement.style.scrollBehavior = "auto";
+    event.currentTarget.setPointerCapture(event.pointerId);
+
     setState((current) => ({
       ...current,
       dragging: true,
       active: true,
       visible: true,
-      thumbHeightPercent: metrics.thumbHeightPercent,
-      thumbTranslateY: metrics.thumbTranslateY,
     }));
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (
+      !draggingRef.current ||
+      event.pointerId !== activePointerIdRef.current
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    latestPointerYRef.current = event.clientY;
+
+    if (!dragFrameRef.current) {
+      dragFrameRef.current = window.requestAnimationFrame(applyDragPosition);
+    }
+  };
+
+  const finishDragging = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (
+      !draggingRef.current ||
+      event.pointerId !== activePointerIdRef.current
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (dragFrameRef.current) {
+      window.cancelAnimationFrame(dragFrameRef.current);
+      applyDragPosition();
+    }
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    draggingRef.current = false;
+    activePointerIdRef.current = null;
+    restoreDragStyles();
+    setState((current) => ({
+      ...current,
+      dragging: false,
+      active: true,
+    }));
+    scheduleHide();
   };
 
   const handleMouseEnter = () => {
     clearHideTimer();
-    setState((current) => ({
-      ...current,
-      hovering: true,
-      active: true,
-    }));
+    setState((current) =>
+      current.hovering && current.active
+        ? current
+        : {
+            ...current,
+            hovering: true,
+            active: true,
+          },
+    );
   };
 
   const handleMouseLeave = () => {
-    setState((current) => ({
-      ...current,
-      hovering: false,
-    }));
+    setState((current) =>
+      current.hovering
+        ? {
+            ...current,
+            hovering: false,
+          }
+        : current,
+    );
     scheduleHide();
   };
 
@@ -229,18 +318,22 @@ export default function ScrollSidebar() {
   const thumbColor = state.dragging ? "#c7c7c7" : "#d9d9d9";
 
   return (
-    <div className="fixed right-2 top-0 z-[1000] h-screen w-3">
+    <div className="fixed top-0 right-2 z-[1000] h-screen w-3">
       <button
+        ref={thumbRef}
         type="button"
         aria-label="Scroll position"
         onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishDragging}
+        onPointerCancel={finishDragging}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onDragStart={(event) => event.preventDefault()}
         className="absolute top-0 right-0 w-1.5 rounded-full border-0 p-0 backdrop-blur-[4px] transition-[width,opacity,background-color] duration-[200ms] hover:w-2"
         style={{
-          height: `${state.thumbHeightPercent}%`,
-          transform: `translateY(${state.thumbTranslateY}px)`,
+          height: "2.6%",
+          transform: "translateY(0)",
           opacity,
           backgroundColor: thumbColor,
           cursor: "default",
