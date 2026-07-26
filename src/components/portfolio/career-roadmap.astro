@@ -1,0 +1,922 @@
+---
+import {
+  BriefcaseBusiness,
+  Code2,
+  Crosshair,
+  GraduationCap,
+  House,
+  MapPin,
+  School,
+  ShieldCheck,
+} from "lucide-react";
+
+const milestones = [
+  {
+    label: "Before Switzerland",
+    title: "Growing up in Germany",
+    description:
+      "I spent my early years and attended school in Germany before moving to Switzerland.",
+    icon: House,
+  },
+  {
+    label: "Arrival in Switzerland",
+    title: "Germany → Switzerland",
+    description:
+      "Moved to Switzerland and joined Sekundarschule B in year 2.",
+    icon: MapPin,
+  },
+  {
+    label: "Around 1.5 years",
+    title: "Finding my footing in Sek. B",
+    description:
+      "Stayed in Sekundarschule B for around one and a half years, including one class change back to year 1.",
+    icon: School,
+  },
+  {
+    label: "Level change",
+    title: "Sek. B year 1 → Sek. A year 2",
+    description:
+      "Changed both class and school level, moving directly into Sekundarschule A in year 2.",
+    icon: School,
+  },
+  {
+    label: "Obligatory school completed",
+    title: "Sekundarschule A, year 3",
+    description:
+      "Continued in Sek. A through year 3 and completed obligatory secondary school.",
+    icon: GraduationCap,
+  },
+  {
+    label: "Current · Year 4, Semester 7/8",
+    title: "Informatiker EFZ Applikationsentwicklung",
+    description:
+      "I am now in Year 4, Semester 7/8 of my apprenticeship, building professional experience in application development.",
+    icon: BriefcaseBusiness,
+    current: true,
+  },
+];
+
+const futurePaths = [
+  {
+    title: "Join the Kantonspolizei",
+    description:
+      "Pursue a role with the cantonal police in Zürich, St. Gallen or Schaffhausen and build a career around responsibility and public service.",
+    icon: ShieldCheck,
+    continuation: {
+      title: "Swiss police special unit",
+      description:
+        "A later specialization I could pursue after gaining operational experience in cantonal policing and meeting the unit's selection requirements.",
+    },
+  },
+  {
+    title: "Continue in IT",
+    description:
+      "Remain in application development, deepen my engineering skills and keep growing through more demanding software projects.",
+    icon: Code2,
+    continuation: null,
+  },
+];
+
+const academicSteps = [
+  {
+    title: "Passerelle",
+    detail: "1 year · Gymnasium bridge",
+  },
+  {
+    title: "Hochschule",
+  },
+  {
+    title: "Bachelor",
+  },
+  {
+    title: "Master",
+  },
+  {
+    title: "Possible doctorate",
+  },
+];
+
+const solidRouteNames = [
+  "history",
+  "future-entry",
+  "future-spine",
+  "future-police",
+  "future-it",
+  "police-continuation",
+];
+
+const dottedRouteNames = [
+  "future-academic",
+  "academic-spine",
+  ...academicSteps.map((_, index) => `academic-step-${index}`),
+];
+
+const routeTipNames = [
+  "history",
+  "future-entry",
+  "future-spine",
+  "future-police",
+  "future-it",
+  "future-academic",
+  "police-continuation",
+  "academic-spine",
+];
+
+const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
+---
+
+<section
+  id="roadmap"
+  data-roadmap-motion
+  aria-labelledby="roadmap-heading"
+  class="bg-transparent px-5 py-24 sm:px-8 lg:px-12"
+>
+  <div class="mx-auto max-w-7xl">
+    <div
+      data-scroll-reveal="heading"
+      class="mb-8 flex items-center gap-5"
+    >
+      <h2
+        id="roadmap-heading"
+        class="shrink-0 text-lg font-semibold text-black/76"
+      >
+        Career roadmap
+      </h2>
+      <div class="h-px flex-1 bg-black/10"></div>
+    </div>
+
+    <div class="roadmap-tree relative pt-4 sm:pt-8">
+      <svg
+        class="roadmap-route-map"
+        viewBox="0 0 1 1"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <filter
+            id="roadmap-route-glow"
+            x="-160%"
+            y="-160%"
+            width="420%"
+            height="420%"
+          >
+            <feGaussianBlur stdDeviation="3.5" result="blur"></feGaussianBlur>
+            <feMerge>
+              <feMergeNode in="blur"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+
+          {
+            dottedRouteNames.map((routeName) => (
+              <mask
+                id={`roadmap-mask-${routeName}`}
+                class="roadmap-route-reveal-mask"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="2000"
+                height="8000"
+              >
+                <path
+                  data-roadmap-mask={routeName}
+                  class="roadmap-route-mask-path"
+                  pathLength="1"
+                />
+              </mask>
+            ))
+          }
+        </defs>
+
+        <g class="roadmap-route-tracks">
+          {
+            allRouteNames.map((routeName) => (
+              <path
+                data-roadmap-track={routeName}
+                class:list={[
+                  "roadmap-route-track",
+                  dottedRouteNames.includes(routeName) &&
+                    "roadmap-route-track-dotted",
+                ]}
+              />
+            ))
+          }
+        </g>
+
+        <g class="roadmap-route-live-lines">
+          {
+            solidRouteNames.map((routeName) => (
+              <path
+                data-roadmap-live={routeName}
+                class="roadmap-route-live"
+                pathLength="1"
+              />
+            ))
+          }
+          {
+            dottedRouteNames.map((routeName) => (
+              <path
+                data-roadmap-live={routeName}
+                class="roadmap-route-live roadmap-route-live-dotted"
+                mask={`url(#roadmap-mask-${routeName})`}
+              />
+            ))
+          }
+        </g>
+
+        <g class="roadmap-route-tips">
+          {
+            routeTipNames.map((routeName) => (
+              <circle
+                data-roadmap-tip={routeName}
+                class="roadmap-route-tip"
+                r="3.2"
+              />
+            ))
+          }
+        </g>
+      </svg>
+
+      <ol class="roadmap-timeline" aria-label="Career history">
+        {
+          milestones.map((milestone, index) => {
+            const Icon = milestone.icon;
+
+            return (
+              <li
+                data-roadmap-step
+                class:list={[
+                  "roadmap-step",
+                  milestone.current && "roadmap-step-current",
+                ]}
+              >
+                <div class="roadmap-node" aria-hidden="true">
+                  <span class="roadmap-node-label">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                <article
+                  class:list={[
+                    "roadmap-card min-w-0 rounded-lg border p-5 shadow-[0_14px_34px_rgba(0,0,0,0.055)] sm:p-6",
+                    milestone.current
+                      ? "border-black bg-[#0d0d0d] text-white"
+                      : "border-black/8 bg-white text-black",
+                  ]}
+                >
+                  <div class="flex items-center justify-between gap-4">
+                    <div
+                      class:list={[
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-md border",
+                        milestone.current
+                          ? "border-white/12 bg-white/8 text-white"
+                          : "border-black/8 bg-black/[0.025] text-black/70",
+                      ]}
+                    >
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    {
+                      milestone.current && (
+                        <span class="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-xs font-semibold text-white/72">
+                          Current
+                        </span>
+                      )
+                    }
+                  </div>
+
+                  <p
+                    class:list={[
+                      "mt-5 text-sm font-medium",
+                      milestone.current ? "text-white/52" : "text-black/60",
+                    ]}
+                  >
+                    {milestone.label}
+                  </p>
+                  <h3 class="mt-2 text-xl font-bold leading-tight [overflow-wrap:anywhere] sm:text-2xl">
+                    {milestone.title}
+                  </h3>
+                  <p
+                    class:list={[
+                      "mt-3 text-sm leading-6 sm:text-base sm:leading-7",
+                      milestone.current ? "text-white/64" : "text-black/58",
+                    ]}
+                  >
+                    {milestone.description}
+                  </p>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ol>
+
+      <div class="roadmap-future">
+        <div
+          data-roadmap-future-heading
+          class="roadmap-future-heading relative mx-auto max-w-2xl text-center"
+        >
+          <span
+            class="roadmap-junction mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-black bg-black text-sm font-bold text-white shadow-[0_0_0_7px_#fcfcfb]"
+            aria-hidden="true"
+          >
+            ?
+          </span>
+          <p class="mt-6 text-sm font-medium text-black/60">
+            The next chapter
+          </p>
+          <h3 class="mt-2 text-2xl font-black tracking-tight text-black sm:text-3xl">
+            Where the path could lead
+          </h3>
+          <p class="mt-3 leading-7 text-black/58">
+            Two directions I am considering now, alongside the academic route
+            I had planned before.
+          </p>
+        </div>
+
+        <div class="roadmap-future-paths" data-roadmap-future-paths>
+          {
+            futurePaths.map((path, index) => {
+              const Icon = path.icon;
+
+              return (
+                <div
+                  data-roadmap-future-branch={index}
+                  class="roadmap-future-branch"
+                >
+                  <article
+                    class="roadmap-future-card rounded-lg border border-black/9 bg-white p-6 shadow-[0_16px_38px_rgba(0,0,0,0.06)] sm:p-7"
+                  >
+                    <div class="flex h-11 w-11 items-center justify-center rounded-md border border-black/8 bg-black text-white">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <p class="mt-6 text-sm font-medium text-black/60">
+                      Possible path
+                    </p>
+                    <h4 class="mt-2 text-2xl font-bold tracking-tight text-black">
+                      {path.title}
+                    </h4>
+                    <p class="mt-3 leading-7 text-black/58">
+                      {path.description}
+                    </p>
+                  </article>
+
+                  {
+                    path.continuation && (
+                      <div
+                        class="roadmap-police-continuation"
+                        data-roadmap-police-continuation
+                      >
+                        <article
+                          class="roadmap-special-unit overflow-hidden rounded-xl border border-white/10 bg-[#1b1f24] text-white shadow-[0_22px_50px_rgba(0,0,0,0.16)]"
+                          aria-labelledby="special-unit-heading"
+                        >
+                          <header class="flex items-center gap-4 p-5 sm:p-6">
+                            <div
+                              class="special-unit-visual relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/12"
+                              aria-hidden="true"
+                            >
+                              <Crosshair className="relative z-10 h-8 w-8 text-white" />
+                              <span class="absolute right-2 bottom-1.5 text-[0.62rem] font-bold text-white/38">
+                                CH
+                              </span>
+                            </div>
+                            <div class="min-w-0">
+                              <p class="text-sm font-medium text-white/58">
+                                Possible continuation
+                              </p>
+                              <h5
+                                id="special-unit-heading"
+                                class="mt-2 text-xl font-bold leading-tight [overflow-wrap:anywhere] sm:text-2xl"
+                              >
+                                {path.continuation.title}
+                              </h5>
+                            </div>
+                          </header>
+
+                          <div class="border-t border-white/12 p-5 sm:p-6">
+                            <p class="text-sm font-medium text-white/58">
+                              Overview
+                            </p>
+                            <p class="mt-3 text-sm leading-6 text-white/68">
+                              {path.continuation.description}
+                            </p>
+                          </div>
+                        </article>
+                      </div>
+                    )
+                  }
+                </div>
+              );
+            })
+          }
+
+          <article
+            data-roadmap-academic-branch
+            class="roadmap-academic-branch"
+            aria-labelledby="earlier-plan-heading"
+          >
+            <header
+              class="roadmap-academic-root rounded-lg border border-dotted border-black/35 bg-white/45 p-6 sm:p-7"
+            >
+              <div class="flex h-11 w-11 items-center justify-center rounded-md border border-dotted border-black/35 bg-black/[0.035] text-black/68">
+                <GraduationCap className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <p class="mt-6 text-sm font-medium text-black/60">
+                Earlier plan
+              </p>
+              <h4
+                id="earlier-plan-heading"
+                class="mt-2 text-2xl font-bold tracking-tight text-black"
+              >
+                The academic route
+              </h4>
+            </header>
+
+            <ol class="academic-tree" aria-label="Earlier academic route">
+              {
+                academicSteps.map((step, index) => (
+                  <li class="academic-step" data-roadmap-academic-step={index}>
+                    <div
+                      class="rounded-md border border-dotted border-black/30 bg-white/35 px-4 py-3"
+                    >
+                      <p class="font-semibold text-black/76">{step.title}</p>
+                      {
+                        step.detail && (
+                          <p class="mt-1 text-sm leading-5 text-black/58">
+                            {step.detail}
+                          </p>
+                        )
+                      }
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .roadmap-tree {
+    isolation: isolate;
+  }
+
+  .roadmap-route-map {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .roadmap-route-track,
+  .roadmap-route-live,
+  .roadmap-route-mask-path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .roadmap-route-track {
+    stroke: rgba(15, 23, 42, 0.085);
+    stroke-width: 1;
+  }
+
+  .roadmap-route-track-dotted {
+    stroke: rgba(15, 23, 42, 0.12);
+    stroke-dasharray: 1 5;
+  }
+
+  .roadmap-route-live {
+    stroke: rgba(15, 23, 42, 0.62);
+    stroke-width: 1.35;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .roadmap-route-live-dotted {
+    stroke: rgba(15, 23, 42, 0.56);
+    stroke-width: 1.2;
+    stroke-dasharray: 1 5;
+    stroke-dashoffset: 0;
+  }
+
+  .roadmap-route-mask-path {
+    stroke: #fff;
+    stroke-width: 10;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .roadmap-route-tip {
+    fill: #2563eb;
+    filter: url("#roadmap-route-glow");
+    opacity: 0;
+  }
+
+  .roadmap-timeline {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .roadmap-timeline::before {
+    content: none;
+  }
+
+  .roadmap-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .roadmap-node {
+    --roadmap-node-angle: 0deg;
+    --roadmap-node-opacity: 1;
+    --roadmap-node-scale: 1;
+    --roadmap-ring-opacity: 0;
+
+    position: relative;
+    z-index: 2;
+    grid-column: 1;
+    display: flex;
+    grid-row: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 9999px;
+    background: #fff;
+    box-shadow: 0 0 0 6px rgba(250, 250, 247, 0.96);
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 0.68rem;
+    font-weight: 700;
+    opacity: var(--roadmap-node-opacity);
+    transform: scale(var(--roadmap-node-scale));
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+
+  .roadmap-node::before,
+  .roadmap-junction::before {
+    position: absolute;
+    inset: -5px;
+    z-index: -1;
+    padding: 2px;
+    border-radius: inherit;
+    background: conic-gradient(
+      from -90deg,
+      #2563eb var(--roadmap-node-angle, 0deg),
+      transparent 0
+    );
+    content: "";
+    opacity: var(--roadmap-ring-opacity, 0);
+    pointer-events: none;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  .roadmap-node-label {
+    position: relative;
+    z-index: 1;
+  }
+
+  .roadmap-card {
+    --roadmap-reveal-opacity: 1;
+    --roadmap-reveal-y: 0px;
+    --roadmap-reveal-scale: 1;
+    --roadmap-reveal-blur: 0px;
+
+    position: relative;
+    z-index: 1;
+    grid-column: 2;
+    grid-row: 1;
+    opacity: var(--roadmap-reveal-opacity);
+    filter: blur(var(--roadmap-reveal-blur));
+    transform: translate3d(0, var(--roadmap-reveal-y), 0)
+      scale(var(--roadmap-reveal-scale));
+    transform-origin: 50% 55%;
+    will-change: transform, opacity, filter;
+  }
+
+  .roadmap-step-current .roadmap-node {
+    border-color: #0d0d0d;
+    background: #0d0d0d;
+    color: #fff;
+  }
+
+  .roadmap-step-current::after {
+    content: none;
+  }
+
+  .roadmap-future {
+    position: relative;
+    z-index: 1;
+    margin-top: 3.75rem;
+  }
+
+  .roadmap-junction {
+    --roadmap-node-angle: 0deg;
+    --roadmap-node-opacity: 1;
+    --roadmap-node-scale: 1;
+    --roadmap-ring-opacity: 0;
+
+    position: relative;
+    opacity: var(--roadmap-node-opacity);
+    transform: scale(var(--roadmap-node-scale));
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+
+  .roadmap-future-heading > :not(.roadmap-junction) {
+    --roadmap-reveal-opacity: 1;
+    --roadmap-reveal-y: 0px;
+    --roadmap-reveal-blur: 0px;
+
+    opacity: var(--roadmap-reveal-opacity);
+    filter: blur(var(--roadmap-reveal-blur));
+    transform: translate3d(0, var(--roadmap-reveal-y), 0);
+    will-change: transform, opacity, filter;
+  }
+
+  .roadmap-future-paths {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    align-items: start;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    padding-left: 1.5rem;
+  }
+
+  .roadmap-future-paths::before {
+    content: none;
+  }
+
+  .roadmap-future-paths::after {
+    content: none;
+  }
+
+  .roadmap-future-branch {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
+
+  .roadmap-future-branch::before {
+    content: none;
+  }
+
+  .roadmap-future-card {
+    --roadmap-reveal-opacity: 1;
+    --roadmap-reveal-y: 0px;
+    --roadmap-reveal-scale: 1;
+    --roadmap-reveal-blur: 0px;
+
+    position: relative;
+    opacity: var(--roadmap-reveal-opacity);
+    filter: blur(var(--roadmap-reveal-blur));
+    transform: translate3d(0, var(--roadmap-reveal-y), 0)
+      scale(var(--roadmap-reveal-scale));
+    transform-origin: 50% 25%;
+    will-change: transform, opacity, filter;
+  }
+
+  .roadmap-police-continuation {
+    position: relative;
+    margin-top: 2.75rem;
+  }
+
+  .roadmap-police-continuation::before {
+    content: none;
+  }
+
+  .roadmap-special-unit {
+    --roadmap-reveal-opacity: 1;
+    --roadmap-reveal-y: 0px;
+    --roadmap-reveal-scale: 1;
+    --roadmap-reveal-blur: 0px;
+
+    opacity: var(--roadmap-reveal-opacity);
+    filter: blur(var(--roadmap-reveal-blur));
+    transform: translate3d(0, var(--roadmap-reveal-y), 0)
+      scale(var(--roadmap-reveal-scale));
+    transform-origin: 50% 10%;
+    will-change: transform, opacity, filter;
+  }
+
+  .special-unit-visual {
+    background:
+      radial-gradient(
+        circle at 82% 18%,
+        rgba(218, 41, 28, 0.52),
+        transparent 34%
+      ),
+      linear-gradient(145deg, #353b44 0%, #111419 76%);
+  }
+
+  .special-unit-visual::before {
+    position: absolute;
+    inset: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    content: "";
+  }
+
+  .special-unit-visual::after {
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    content: "";
+  }
+
+  .roadmap-academic-branch {
+    position: relative;
+    z-index: 1;
+  }
+
+  .roadmap-academic-branch::before {
+    content: none;
+  }
+
+  .roadmap-academic-branch::after {
+    content: none;
+  }
+
+  .roadmap-academic-root {
+    --roadmap-reveal-opacity: 1;
+    --roadmap-reveal-y: 0px;
+    --roadmap-reveal-scale: 1;
+    --roadmap-reveal-blur: 0px;
+
+    position: relative;
+    z-index: 3;
+    opacity: var(--roadmap-reveal-opacity);
+    filter: blur(var(--roadmap-reveal-blur));
+    transform: translate3d(0, var(--roadmap-reveal-y), 0)
+      scale(var(--roadmap-reveal-scale));
+    transform-origin: 50% 20%;
+    will-change: transform, opacity, filter;
+  }
+
+  .academic-tree {
+    position: relative;
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.9rem 0 0;
+    padding: 0 0 0 1.25rem;
+    list-style: none;
+  }
+
+  .academic-tree::before {
+    content: none;
+  }
+
+  .academic-step {
+    position: relative;
+  }
+
+  .academic-step::before {
+    content: none;
+  }
+
+  .academic-step > div {
+    --roadmap-reveal-opacity: 1;
+    --roadmap-reveal-y: 0px;
+    --roadmap-reveal-scale: 1;
+    --roadmap-reveal-blur: 0px;
+
+    opacity: var(--roadmap-reveal-opacity);
+    filter: blur(var(--roadmap-reveal-blur));
+    transform: translate3d(0, var(--roadmap-reveal-y), 0)
+      scale(var(--roadmap-reveal-scale));
+    transform-origin: 0 50%;
+    will-change: transform, opacity, filter;
+  }
+
+  .roadmap-measuring .roadmap-node,
+  .roadmap-measuring .roadmap-junction,
+  .roadmap-measuring .roadmap-card,
+  .roadmap-measuring .roadmap-future-card,
+  .roadmap-measuring .roadmap-special-unit,
+  .roadmap-measuring .roadmap-academic-root,
+  .roadmap-measuring .academic-step > div,
+  .roadmap-measuring .roadmap-future-heading > :not(.roadmap-junction) {
+    filter: none !important;
+    transform: none !important;
+  }
+
+  @media (min-width: 768px) {
+    .roadmap-timeline {
+      gap: 1.5rem;
+    }
+
+    .roadmap-timeline::before {
+      bottom: -5.4rem;
+      left: 50%;
+      translate: -0.5px 0;
+    }
+
+    .roadmap-step {
+      grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .roadmap-node {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .roadmap-card {
+      grid-column: 1;
+      margin-right: 0.25rem;
+    }
+
+    .roadmap-step:nth-child(even) .roadmap-card {
+      grid-column: 3;
+      margin-right: 0;
+      margin-left: 0.25rem;
+    }
+
+    .roadmap-step-current::after {
+      content: none;
+    }
+
+    .roadmap-future {
+      margin-top: 4.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .roadmap-future-paths {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      padding-left: 0;
+    }
+
+    .roadmap-future-paths::before,
+    .roadmap-future-paths::after {
+      content: none;
+    }
+
+    .roadmap-future-branch::before,
+    .roadmap-future-branch::after {
+      content: none;
+    }
+
+    .roadmap-academic-branch::before,
+    .roadmap-academic-branch::after {
+      content: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roadmap-route-tip {
+      display: none;
+    }
+
+    .roadmap-card,
+    .roadmap-future-card,
+    .roadmap-special-unit,
+    .roadmap-academic-root,
+    .academic-step > div,
+    .roadmap-future-heading > :not(.roadmap-junction) {
+      filter: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .roadmap-node,
+    .roadmap-junction {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  import "./career-roadmap-motion";
+</script>

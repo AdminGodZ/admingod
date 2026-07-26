@@ -62,15 +62,16 @@ const particles = Array.from({ length: 112 }, (_, index) => {
 <style>
   .void-particle-transition {
     position: absolute;
-    right: 0;
     bottom: 0;
-    left: 0;
+    left: 50%;
     z-index: 8;
+    width: 100vw;
     height: clamp(120px, 15vw, 190px);
     overflow: hidden;
     pointer-events: none;
     contain: layout paint;
     isolation: isolate;
+    transform: translateX(-50%);
   }
 
   @supports (height: 100svh) {
@@ -106,6 +107,20 @@ const particles = Array.from({ length: 112 }, (_, index) => {
       );
     filter: blur(16px);
     opacity: 0.68;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 24%,
+      #000 64%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 24%,
+      #000 64%,
+      transparent 100%
+    );
     animation: void-transition-depth 9s ease-in-out infinite;
   }
 
@@ -158,8 +173,8 @@ const particles = Array.from({ length: 112 }, (_, index) => {
     background: linear-gradient(
       to bottom,
       rgb(255 255 255 / 0%) 0%,
-      rgb(255 255 255 / 42%) 54%,
-      #ffffff 100%
+      rgb(248 249 247 / 24%) 54%,
+      rgb(248 249 247 / 0%) 100%
     );
   }
 

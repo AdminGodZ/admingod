@@ -66,6 +66,9 @@ export default function VoidParticleField({
     let last = performance.now();
 
     const resize = () => {
+      canvas.style.removeProperty("width");
+      canvas.style.removeProperty("height");
+
       const rect = canvas.getBoundingClientRect();
       width = Math.max(1, Math.floor(rect.width));
       height = Math.max(1, Math.floor(rect.height));
@@ -73,8 +76,6 @@ export default function VoidParticleField({
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const count = clamp(Math.floor(width / 4.8), 220, 560);
