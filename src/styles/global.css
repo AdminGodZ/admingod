@@ -95,6 +95,23 @@ body {
 
 html {
   scroll-behavior: smooth;
+  transition: filter 240ms ease;
+}
+
+html.portfolio-inverted {
+  filter: invert(1);
+}
+
+.theme-toggle-sun {
+  display: none;
+}
+
+html.portfolio-inverted .theme-toggle-moon {
+  display: none;
+}
+
+html.portfolio-inverted .theme-toggle-sun {
+  display: block;
 }
 
 html::-webkit-scrollbar,
@@ -112,6 +129,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+    transition: none;
   }
 
   .hero-reveal-eyebrow,
@@ -177,6 +195,26 @@ body {
   }
 }
 
+@keyframes scroll-reveal-card-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--scroll-reveal-distance, 28px);
+    scale: var(--scroll-reveal-scale, 0.985);
+    filter: blur(var(--scroll-reveal-blur, 5px));
+  }
+
+  36% {
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    filter: blur(0);
+  }
+}
+
 [data-scroll-reveal].scroll-reveal-pending {
   opacity: 0;
   translate: 0 var(--scroll-reveal-distance, 28px);
@@ -195,6 +233,15 @@ body {
   --scroll-reveal-scale: 1;
   --scroll-reveal-blur: 5px;
   --scroll-reveal-duration: 660ms;
+}
+
+[data-scroll-reveal="card"] {
+  --scroll-reveal-blur: 5px;
+  --scroll-reveal-duration: 620ms;
+}
+
+[data-scroll-reveal="card"].scroll-reveal-pending.scroll-reveal-visible {
+  animation-name: scroll-reveal-card-in;
 }
 
 [data-scroll-reveal="footer"] {

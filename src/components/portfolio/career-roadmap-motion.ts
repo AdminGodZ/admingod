@@ -264,6 +264,7 @@ if (section) {
       if (!element) return;
 
       const progress = easeOutCubic(clamp(rawProgress));
+      const blurProgress = easeOutCubic(clamp(rawProgress / 0.24));
       element.style.setProperty(
         "--roadmap-reveal-opacity",
         progress.toFixed(4),
@@ -278,7 +279,7 @@ if (section) {
       );
       element.style.setProperty(
         "--roadmap-reveal-blur",
-        `${((1 - progress) * 8).toFixed(2)}px`,
+        `${((1 - blurProgress) * 5).toFixed(2)}px`,
       );
     };
 
