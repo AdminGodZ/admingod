@@ -165,6 +165,7 @@ if (section) {
     let frame = 0;
     let lastFrameTime = 0;
     let currentLead = 0;
+    let furthestLead = Number.NEGATIVE_INFINITY;
     let hasInitialLead = false;
     let resizeFrame = 0;
 
@@ -709,10 +710,15 @@ if (section) {
       return window.innerHeight * 0.62 - treeRect.top;
     };
 
+    const getForwardTargetLead = () => {
+      furthestLead = Math.max(furthestLead, getTargetLead());
+      return furthestLead;
+    };
+
     const runFrame = (time: number) => {
       frame = 0;
 
-      const targetLead = getTargetLead();
+      const targetLead = getForwardTargetLead();
       if (!hasInitialLead) {
         currentLead = targetLead;
         hasInitialLead = true;
@@ -744,14 +750,14 @@ if (section) {
       window.cancelAnimationFrame(resizeFrame);
       resizeFrame = window.requestAnimationFrame(() => {
         measure();
-        currentLead = getTargetLead();
+        currentLead = Math.max(currentLead, getForwardTargetLead());
         hasInitialLead = true;
         render(currentLead);
       });
     };
 
     measure();
-    currentLead = getTargetLead();
+    currentLead = getForwardTargetLead();
     hasInitialLead = true;
     render(currentLead);
 
