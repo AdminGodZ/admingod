@@ -1,22 +1,39 @@
 ---
-const twinklingStars = [
-  { x: 5, y: 18, size: 1.5, duration: 11, delay: -3, driftX: 3, driftY: -2 },
-  { x: 11, y: 49, size: 1.1, duration: 15, delay: -9, driftX: -2, driftY: 3 },
-  { x: 18, y: 77, size: 1.3, duration: 9, delay: -5, driftX: 2, driftY: 2 },
-  { x: 25, y: 7, size: 1.2, duration: 14, delay: -12, driftX: -3, driftY: 1 },
-  { x: 31, y: 34, size: 1.8, duration: 12, delay: -7, driftX: 2, driftY: -3 },
-  { x: 37, y: 66, size: 1.2, duration: 17, delay: -14, driftX: 3, driftY: 2 },
-  { x: 44, y: 91, size: 1.4, duration: 10, delay: -2, driftX: -2, driftY: -2 },
-  { x: 51, y: 45, size: 1.1, duration: 13, delay: -10, driftX: 2, driftY: 3 },
-  { x: 57, y: 15, size: 1.3, duration: 16, delay: -6, driftX: -3, driftY: -2 },
-  { x: 63, y: 78, size: 1.6, duration: 11, delay: -8, driftX: 3, driftY: -1 },
-  { x: 69, y: 31, size: 1.2, duration: 14, delay: -4, driftX: -2, driftY: 2 },
-  { x: 75, y: 58, size: 1.7, duration: 9, delay: -7, driftX: 2, driftY: -3 },
-  { x: 81, y: 9, size: 1.1, duration: 15, delay: -13, driftX: 3, driftY: 2 },
-  { x: 87, y: 40, size: 1.4, duration: 12, delay: -1, driftX: -3, driftY: -1 },
-  { x: 92, y: 71, size: 1.2, duration: 16, delay: -11, driftX: 2, driftY: 3 },
-  { x: 97, y: 24, size: 1.5, duration: 10, delay: -6, driftX: -2, driftY: -2 },
-];
+const createSeededRandom = (seed: number) => {
+  let state = seed;
+
+  return () => {
+    state = (state * 48271) % 2147483647;
+    return state / 2147483647;
+  };
+};
+
+const random = createSeededRandom(24051998);
+const round = (value: number) => Number(value.toFixed(2));
+const starColumns = 20;
+const starRows = 10;
+
+const stars = Array.from({ length: starColumns * starRows }, (_, index) => {
+  const column = index % starColumns;
+  const row = Math.floor(index / starColumns);
+  const distributionRank = (index * 73) % (starColumns * starRows);
+  const duration = round(13 + random() * 10);
+
+  return {
+    x: round(((column + 0.15 + random() * 0.7) / starColumns) * 100),
+    y: round(((row + 0.15 + random() * 0.7) / starRows) * 100),
+    size: round(0.7 + random() * 1.2),
+    duration,
+    delay: round(-random() * duration),
+    lightBase: round(0.18 + random() * 0.2),
+    darkBase: round(0.34 + random() * 0.28),
+    lightPeak: round(0.58 + random() * 0.22),
+    darkPeak: round(0.8 + random() * 0.18),
+    twinkles: distributionRank < 64,
+    desktopOnly: distributionRank >= 120,
+    accent: (index * 31) % 17 < 3,
+  };
+});
 
 const shootingStars = [
   {
@@ -44,10 +61,17 @@ const shootingStars = [
 
 <div class="living-starfield" aria-hidden="true">
   {
-    twinklingStars.map((star) => (
+    stars.map((star) => (
       <span
-        class="living-starfield__twinkle"
-        style={`--star-x:${star.x}%;--star-y:${star.y}%;--star-size:${star.size}px;--star-duration:${star.duration}s;--star-delay:${star.delay}s;--star-drift-x:${star.driftX}px;--star-drift-y:${star.driftY}px;`}
+        class:list={[
+          "living-starfield__star",
+          {
+            "living-starfield__star--twinkle": star.twinkles,
+            "living-starfield__star--desktop-only": star.desktopOnly,
+            "living-starfield__star--accent": star.accent,
+          },
+        ]}
+        style={`--star-x:${star.x}%;--star-y:${star.y}%;--star-size:${star.size}px;--star-duration:${star.duration}s;--star-delay:${star.delay}s;--star-light-base:${star.lightBase};--star-dark-base:${star.darkBase};--star-light-peak:${star.lightPeak};--star-dark-peak:${star.darkPeak};`}
       />
     ))
   }
@@ -64,7 +88,6 @@ const shootingStars = [
 
 <style>
   .living-starfield {
-    --living-star-color: 15 23 42;
     --living-shooting-core-color: 15 23 42;
     --living-shooting-tail-color: 37 99 235;
 
@@ -76,24 +99,8 @@ const shootingStars = [
   }
 
   :global(html.dark) .living-starfield {
-    --living-star-color: 255 255 255;
     --living-shooting-core-color: 255 255 255;
     --living-shooting-tail-color: 147 197 253;
-  }
-
-  .living-starfield__twinkle {
-    position: absolute;
-    top: var(--star-y);
-    left: var(--star-x);
-    width: var(--star-size);
-    height: var(--star-size);
-    border-radius: 999px;
-    background: rgb(var(--living-star-color) / 88%);
-    box-shadow: 0 0 7px rgb(var(--living-star-color) / 32%);
-    opacity: 0.08;
-    transform: scale(0.72);
-    animation: living-starfield-twinkle var(--star-duration) ease-in-out
-      var(--star-delay) infinite;
   }
 
   .living-starfield__shooting-star {
@@ -143,65 +150,6 @@ const shootingStars = [
     transform: translateY(-50%);
   }
 
-  @keyframes living-starfield-twinkle {
-    0%,
-    100% {
-      opacity: 0.08;
-      transform: translate3d(0, 0, 0) scale(0.72);
-    }
-
-    66%,
-    78% {
-      opacity: 0.08;
-      transform: translate3d(
-          var(--star-drift-x),
-          var(--star-drift-y),
-          0
-        )
-        scale(0.72);
-    }
-
-    69% {
-      opacity: 0.38;
-      transform: translate3d(
-          var(--star-drift-x),
-          var(--star-drift-y),
-          0
-        )
-        scale(1.08);
-    }
-
-    71% {
-      opacity: 0.96;
-      transform: translate3d(
-          var(--star-drift-x),
-          var(--star-drift-y),
-          0
-        )
-        scale(1.72);
-    }
-
-    73% {
-      opacity: 0.18;
-      transform: translate3d(
-          var(--star-drift-x),
-          var(--star-drift-y),
-          0
-        )
-        scale(0.9);
-    }
-
-    75% {
-      opacity: 0.72;
-      transform: translate3d(
-          var(--star-drift-x),
-          var(--star-drift-y),
-          0
-        )
-        scale(1.38);
-    }
-  }
-
   @keyframes living-starfield-shoot {
     0%,
     84% {
@@ -243,7 +191,7 @@ const shootingStars = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .living-starfield {
+    .living-starfield__shooting-star {
       display: none;
     }
   }

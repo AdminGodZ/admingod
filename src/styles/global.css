@@ -359,21 +359,21 @@ body {
     background:
       radial-gradient(
         circle at 14% 20%,
-        rgba(255, 255, 255, 0.82) 0%,
-        rgba(255, 255, 255, 0.42) 22%,
+        rgba(255, 255, 255, 0.22) 0%,
+        rgba(255, 255, 255, 0.08) 22%,
         transparent 60%
       ),
       radial-gradient(
         circle at 84% 14%,
-        rgba(255, 255, 255, 0.8) 0%,
-        rgba(255, 255, 255, 0.38) 18%,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.07) 18%,
         transparent 55%
       ),
       linear-gradient(
         180deg,
-        rgba(249, 250, 248, 0.62) 0%,
-        rgba(249, 250, 248, 0.28) 56%,
-        rgba(249, 250, 248, 0.03) 100%
+        rgba(249, 250, 248, 0.18) 0%,
+        rgba(249, 250, 248, 0.07) 56%,
+        transparent 100%
       );
     animation: void-drift 22s ease-in-out infinite;
   }
@@ -566,24 +566,57 @@ body {
     background-size: 330px 290px;
   }
 
+  /* LivingStarfield owns the persistent stars so those same points can twinkle. */
+  .portfolio-page {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(226, 232, 240, 0.34) 0%,
+        rgba(255, 255, 255, 0) 14%,
+        rgba(255, 255, 255, 0) 84%,
+        rgba(219, 234, 254, 0.3) 100%
+      ),
+      linear-gradient(180deg, #f8fafc 0%, #ffffff 38%, #f8fafc 100%);
+    background-position:
+      center,
+      center;
+    background-size:
+      100% 100%,
+      100% 100%;
+    background-repeat:
+      no-repeat,
+      no-repeat;
+  }
+
+  .portfolio-page::before {
+    display: none;
+  }
+
+  .dark .portfolio-page {
+    background-image:
+      radial-gradient(circle at 0% 18%, rgb(31 41 55 / 24%), transparent 34%),
+      radial-gradient(circle at 100% 66%, rgb(30 58 138 / 18%), transparent 38%),
+      linear-gradient(#000, #000);
+  }
+
   .dark .portfolio-void-bg {
     background:
       radial-gradient(
         circle at 14% 20%,
-        rgb(38 38 38 / 48%) 0%,
-        rgb(23 23 23 / 22%) 24%,
+        rgb(38 38 38 / 20%) 0%,
+        rgb(23 23 23 / 8%) 24%,
         transparent 60%
       ),
       radial-gradient(
         circle at 84% 14%,
-        rgb(38 38 38 / 42%) 0%,
-        rgb(23 23 23 / 18%) 20%,
+        rgb(38 38 38 / 18%) 0%,
+        rgb(23 23 23 / 7%) 20%,
         transparent 56%
       ),
       linear-gradient(
         180deg,
-        rgb(10 10 10 / 74%) 0%,
-        rgb(0 0 0 / 38%) 56%,
+        rgb(10 10 10 / 20%) 0%,
+        rgb(0 0 0 / 8%) 56%,
         transparent 100%
       );
   }
@@ -635,6 +668,67 @@ body {
   .dark .project-card:hover {
     border-color: rgb(255 255 255 / 20%);
     box-shadow: 0 26px 58px rgb(0 0 0 / 72%);
+  }
+
+  .living-starfield__star {
+    --star-base: var(--star-light-base);
+    --star-color: 15 23 42;
+    --star-peak: var(--star-light-peak);
+
+    position: absolute;
+    top: var(--star-y);
+    left: var(--star-x);
+    width: var(--star-size);
+    height: var(--star-size);
+    border-radius: 999px;
+    background: rgb(var(--star-color));
+    box-shadow: 0 0 5px rgb(var(--star-color) / 22%);
+    opacity: var(--star-base);
+  }
+
+  .living-starfield__star--twinkle {
+    animation: living-persistent-star-twinkle var(--star-duration) ease-in-out
+      var(--star-delay) infinite;
+  }
+
+  .living-starfield__star--accent {
+    --star-color: 37 99 235;
+  }
+
+  .dark .living-starfield__star {
+    --star-base: var(--star-dark-base);
+    --star-color: 255 255 255;
+    --star-peak: var(--star-dark-peak);
+
+    box-shadow: 0 0 6px rgb(var(--star-color) / 30%);
+  }
+
+  .dark .living-starfield__star--accent {
+    --star-color: 96 165 250;
+  }
+
+  @keyframes living-persistent-star-twinkle {
+    0%,
+    28%,
+    100% {
+      opacity: var(--star-base);
+    }
+
+    64% {
+      opacity: var(--star-peak);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .living-starfield__star--desktop-only {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .living-starfield__star--twinkle {
+      animation: none;
+    }
   }
 }
 
