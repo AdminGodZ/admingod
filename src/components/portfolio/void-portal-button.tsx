@@ -28,7 +28,7 @@ export default function VoidPortalButton({
     <button
       type="button"
       onClick={handleClick}
-      className={`inline-flex h-12 w-12 select-none items-center justify-center rounded-full border border-[#202020] bg-[#111111] text-white backdrop-blur-md transition-transform duration-300 hover:-translate-y-0.5 hover:bg-black ${className ?? ""}`}
+      className={`inline-flex h-12 w-12 select-none items-center justify-center rounded-full border border-[#202020] bg-[#111111] text-white backdrop-blur-md transition-colors duration-300 hover:bg-black ${className ?? ""}`}
       aria-label={ariaLabel}
     >
       {children}

@@ -706,7 +706,7 @@ if (section) {
       }
 
       const treeRect = roadmapTree.getBoundingClientRect();
-      return window.innerHeight * 0.5 - treeRect.top;
+      return window.innerHeight * 0.62 - treeRect.top;
     };
 
     const runFrame = (time: number) => {

@@ -315,7 +315,9 @@ export default function ScrollSidebar() {
   const shouldShow =
     state.visible && (state.dragging || state.hovering || state.active);
   const opacity = shouldShow ? 1 : 0;
-  const thumbColor = state.dragging ? "#c7c7c7" : "#d9d9d9";
+  const thumbColorClass = state.dragging
+    ? "bg-[#c7c7c7] dark:bg-[#737373]"
+    : "bg-[#d9d9d9] dark:bg-[#404040]";
 
   return (
     <div className="fixed top-0 right-2 z-[1000] h-screen w-3">
@@ -330,12 +332,11 @@ export default function ScrollSidebar() {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onDragStart={(event) => event.preventDefault()}
-        className="absolute top-0 right-0 w-1.5 rounded-full border-0 p-0 backdrop-blur-[4px] transition-[width,opacity,background-color] duration-[200ms] hover:w-2"
+        className={`absolute top-0 right-0 w-1.5 rounded-full border-0 p-0 backdrop-blur-[4px] transition-[width,opacity,background-color] duration-[200ms] hover:w-2 ${thumbColorClass}`}
         style={{
           height: "2.6%",
           transform: "translateY(0)",
           opacity,
-          backgroundColor: thumbColor,
           cursor: "default",
           touchAction: "none",
         }}

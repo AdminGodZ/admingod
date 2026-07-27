@@ -121,12 +121,12 @@ export function HeroTextReveal({
           animate="visible"
           variants={eyebrowVariants}
           className={cn(
-            "hero-reveal-eyebrow mb-5 inline-flex items-center gap-2.5 text-base font-semibold tracking-[0.04em] text-black/58 sm:text-lg",
+            "hero-reveal-eyebrow mb-5 inline-flex items-center gap-2.5 text-base font-semibold tracking-[0.04em] text-black/58 dark:text-white/58 sm:text-lg",
             eyebrowClassName,
           )}
         >
           <span
-            className="h-px w-7 bg-black/20"
+            className="h-px w-7 bg-black/20 dark:bg-white/22"
             aria-hidden="true"
           />
           <span>{eyebrow}</span>

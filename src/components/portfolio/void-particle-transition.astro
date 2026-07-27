@@ -38,8 +38,6 @@ const particles = Array.from({ length: 112 }, (_, index) => {
 ---
 
 <div class="void-particle-transition" aria-hidden="true">
-  <div class="void-particle-transition__depth"></div>
-
   <div class="void-particle-transition__field">
     {
       particles.map((particle) => (
@@ -78,50 +76,6 @@ const particles = Array.from({ length: 112 }, (_, index) => {
     .void-particle-transition {
       bottom: max(0px, calc(100% - 100svh));
     }
-  }
-
-  .void-particle-transition__depth {
-    position: absolute;
-    z-index: 1;
-    inset: 28% -4% 2%;
-    background:
-      radial-gradient(
-        ellipse 18% 54% at 8% 64%,
-        rgb(0 0 0 / 9%),
-        transparent 72%
-      ),
-      radial-gradient(
-        ellipse 23% 60% at 35% 61%,
-        rgb(0 0 0 / 7%),
-        transparent 74%
-      ),
-      radial-gradient(
-        ellipse 22% 58% at 68% 63%,
-        rgb(0 0 0 / 8%),
-        transparent 74%
-      ),
-      radial-gradient(
-        ellipse 17% 52% at 93% 65%,
-        rgb(0 0 0 / 8%),
-        transparent 72%
-      );
-    filter: blur(16px);
-    opacity: 0.68;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      #000 24%,
-      #000 64%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      #000 24%,
-      #000 64%,
-      transparent 100%
-    );
-    animation: void-transition-depth 9s ease-in-out infinite;
   }
 
   .void-particle-transition__field {
@@ -178,6 +132,20 @@ const particles = Array.from({ length: 112 }, (_, index) => {
     );
   }
 
+  :global(html.dark) .void-particle-transition__particle {
+    background: rgb(220 220 220);
+    box-shadow: 0 0 6px rgb(255 255 255 / 18%);
+  }
+
+  :global(html.dark) .void-particle-transition__wash {
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0%) 0%,
+      rgb(0 0 0 / 50%) 54%,
+      rgb(0 0 0 / 0%) 100%
+    );
+  }
+
   @keyframes void-transition-particle {
     0% {
       opacity: 0;
@@ -203,19 +171,6 @@ const particles = Array.from({ length: 112 }, (_, index) => {
     }
   }
 
-  @keyframes void-transition-depth {
-    0%,
-    100% {
-      opacity: 0.52;
-      transform: scaleY(0.88);
-    }
-
-    50% {
-      opacity: 0.72;
-      transform: scaleY(1.08);
-    }
-  }
-
   @media (max-width: 640px) {
     .void-particle-transition {
       height: 126px;
@@ -227,13 +182,8 @@ const particles = Array.from({ length: 112 }, (_, index) => {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .void-particle-transition__depth,
     .void-particle-transition__particle {
       animation: none;
-    }
-
-    .void-particle-transition__depth {
-      opacity: 0.56;
     }
 
     .void-particle-transition__particle {

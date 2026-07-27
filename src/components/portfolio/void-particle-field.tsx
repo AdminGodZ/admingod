@@ -64,6 +64,7 @@ export default function VoidParticleField({
     let particles: Particle[] = [];
     let raf = 0;
     let last = performance.now();
+    let dark = document.documentElement.classList.contains("dark");
 
     const resize = () => {
       canvas.style.removeProperty("width");
@@ -96,9 +97,18 @@ export default function VoidParticleField({
       ctx.clearRect(0, 0, width, height);
 
       const gradient = ctx.createLinearGradient(0, height, 0, 0);
-      gradient.addColorStop(0, "rgba(10, 10, 10, 0.085)");
-      gradient.addColorStop(0.22, "rgba(14, 14, 14, 0.04)");
-      gradient.addColorStop(0.56, "rgba(16, 16, 16, 0.012)");
+      gradient.addColorStop(
+        0,
+        dark ? "rgba(255, 255, 255, 0.055)" : "rgba(10, 10, 10, 0.085)",
+      );
+      gradient.addColorStop(
+        0.22,
+        dark ? "rgba(245, 245, 245, 0.026)" : "rgba(14, 14, 14, 0.04)",
+      );
+      gradient.addColorStop(
+        0.56,
+        dark ? "rgba(235, 235, 235, 0.008)" : "rgba(16, 16, 16, 0.012)",
+      );
       gradient.addColorStop(1, "rgba(16, 16, 16, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
@@ -119,9 +129,13 @@ export default function VoidParticleField({
         const rise = 1 - clamp(particle.y / height, 0, 1);
         const fade = clamp(1 - rise * 0.95, 0.06, 1);
         const alpha = clamp(particle.alpha * fade * 1.08, 0, 1);
-        ctx.fillStyle = `rgba(22, 22, 22, ${alpha})`;
+        ctx.fillStyle = dark
+          ? `rgba(226, 226, 226, ${alpha * 0.72})`
+          : `rgba(22, 22, 22, ${alpha})`;
         ctx.shadowBlur = 6 + particle.size * 2.6;
-        ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
+        ctx.shadowColor = dark
+          ? "rgba(255, 255, 255, 0.18)"
+          : "rgba(0, 0, 0, 0.35)";
         ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
       }
 
@@ -141,6 +155,17 @@ export default function VoidParticleField({
 
     resize();
     window.addEventListener("resize", onResize, { passive: true });
+    const themeObserver = new MutationObserver(() => {
+      dark = document.documentElement.classList.contains("dark");
+
+      if (prefersReducedMotion) {
+        draw(performance.now());
+      }
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     if (prefersReducedMotion) {
       draw(0);
@@ -151,6 +176,7 @@ export default function VoidParticleField({
     return () => {
       window.cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      themeObserver.disconnect();
     };
   }, []);
 

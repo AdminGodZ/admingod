@@ -36,11 +36,12 @@ const openGraphDescription =
     <meta name="twitter:description" content={openGraphDescription} />
     <script is:inline>
       try {
-        if (
-          localStorage.getItem("admingod-color-inversion") === "true"
-        ) {
-          document.documentElement.classList.add("portfolio-inverted");
-        }
+        const savedTheme = localStorage.getItem("admingod-theme");
+        const legacyDarkMode =
+          localStorage.getItem("admingod-color-inversion") === "true";
+        const theme = savedTheme ?? (legacyDarkMode ? "dark" : "light");
+
+        document.documentElement.classList.toggle("dark", theme === "dark");
       } catch {}
     </script>
   </head>
@@ -48,42 +49,44 @@ const openGraphDescription =
     <slot />
     <button
       type="button"
-      data-color-inversion-toggle
+      data-theme-toggle
       aria-label="Switch to dark mode"
       aria-pressed="false"
       title="Switch to dark mode"
-      class="fixed right-4 bottom-4 z-[100] inline-flex size-12 items-center justify-center rounded-full border border-white/15 bg-black text-white shadow-[0_12px_32px_rgba(0,0,0,0.22)] transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(0,0,0,0.28)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black sm:right-6 sm:bottom-6"
+      class="fixed right-4 bottom-4 z-[100] inline-flex size-12 items-center justify-center rounded-full border border-black bg-black text-white shadow-[0_12px_32px_rgba(0,0,0,0.22)] transition-[background-color,border-color,color,box-shadow] duration-300 hover:shadow-[0_16px_38px_rgba(0,0,0,0.28)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black dark:border-white dark:bg-white dark:text-black dark:shadow-[0_12px_32px_rgba(0,0,0,0.55)] dark:hover:shadow-[0_16px_38px_rgba(0,0,0,0.68)] dark:focus-visible:outline-white sm:right-6 sm:bottom-6"
     >
       <Moon className="theme-toggle-moon size-5" aria-hidden="true" />
       <Sun className="theme-toggle-sun size-5" aria-hidden="true" />
     </button>
 
     <script>
-      const storageKey = "admingod-color-inversion";
+      const storageKey = "admingod-theme";
+      const legacyStorageKey = "admingod-color-inversion";
       const root = document.documentElement;
       const toggle = document.querySelector<HTMLButtonElement>(
-        "[data-color-inversion-toggle]",
+        "[data-theme-toggle]",
       );
 
       const syncToggle = () => {
         if (!toggle) return;
 
-        const inverted = root.classList.contains("portfolio-inverted");
-        const label = inverted
+        const dark = root.classList.contains("dark");
+        const label = dark
           ? "Switch to light mode"
           : "Switch to dark mode";
 
         toggle.setAttribute("aria-label", label);
-        toggle.setAttribute("aria-pressed", String(inverted));
+        toggle.setAttribute("aria-pressed", String(dark));
         toggle.title = label;
       };
 
       syncToggle();
       toggle?.addEventListener("click", () => {
-        const inverted = root.classList.toggle("portfolio-inverted");
+        const dark = root.classList.toggle("dark");
 
         try {
-          localStorage.setItem(storageKey, String(inverted));
+          localStorage.setItem(storageKey, dark ? "dark" : "light");
+          localStorage.removeItem(legacyStorageKey);
         } catch {}
 
         syncToggle();

@@ -58,14 +58,12 @@ import Layout from "@/layouts/layout.astro";
     margin: 0;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .not-found {
-      background: #000;
-      color: #fff;
-    }
+  :global(html.dark) .not-found {
+    background: #000;
+    color: #fff;
+  }
 
-    h1 {
-      border-right-color: rgb(255 255 255 / 30%);
-    }
+  :global(html.dark) h1 {
+    border-right-color: rgb(255 255 255 / 30%);
   }
 </style>

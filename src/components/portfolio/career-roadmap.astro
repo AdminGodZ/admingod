@@ -138,11 +138,11 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     >
       <h2
         id="roadmap-heading"
-        class="shrink-0 text-lg font-semibold text-black/76"
+        class="shrink-0 text-lg font-semibold text-black/76 dark:text-white/76"
       >
         Career roadmap
       </h2>
-      <div class="h-px flex-1 bg-black/10"></div>
+      <div class="h-px flex-1 bg-black/10 dark:bg-white/12"></div>
     </div>
 
     <div class="roadmap-tree relative pt-4 sm:pt-8">
@@ -260,8 +260,8 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
                   class:list={[
                     "roadmap-card min-w-0 rounded-lg border p-5 shadow-[0_14px_34px_rgba(0,0,0,0.055)] sm:p-6",
                     milestone.current
-                      ? "border-black bg-[#0d0d0d] text-white"
-                      : "border-black/8 bg-white text-black",
+                      ? "border-black bg-[#0d0d0d] text-white dark:border-white/14 dark:bg-[#111111]"
+                      : "border-black/8 bg-white text-black dark:border-white/10 dark:bg-[#0a0a0a] dark:text-white",
                   ]}
                 >
                   <div class="flex items-center justify-between gap-4">
@@ -270,7 +270,7 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-md border",
                         milestone.current
                           ? "border-white/12 bg-white/8 text-white"
-                          : "border-black/8 bg-black/[0.025] text-black/70",
+                          : "border-black/8 bg-black/[0.025] text-black/70 dark:border-white/10 dark:bg-white/6 dark:text-white/72",
                       ]}
                     >
                       <Icon className="h-5 w-5" aria-hidden="true" />
@@ -287,7 +287,9 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
                   <p
                     class:list={[
                       "mt-5 text-sm font-medium",
-                      milestone.current ? "text-white/52" : "text-black/60",
+                      milestone.current
+                        ? "text-white/52"
+                        : "text-black/60 dark:text-white/58",
                     ]}
                   >
                     {milestone.label}
@@ -298,7 +300,9 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
                   <p
                     class:list={[
                       "mt-3 text-sm leading-6 sm:text-base sm:leading-7",
-                      milestone.current ? "text-white/64" : "text-black/58",
+                      milestone.current
+                        ? "text-white/64"
+                        : "text-black/58 dark:text-white/56",
                     ]}
                   >
                     {milestone.description}
@@ -316,18 +320,18 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
           class="roadmap-future-heading relative mx-auto max-w-2xl text-center"
         >
           <span
-            class="roadmap-junction mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-black bg-black text-sm font-bold text-white shadow-[0_0_0_7px_#fcfcfb]"
+            class="roadmap-junction mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-black bg-black text-sm font-bold text-white shadow-[0_0_0_7px_#fcfcfb] dark:border-white dark:bg-white dark:text-black dark:shadow-[0_0_0_7px_#000]"
             aria-hidden="true"
           >
             ?
           </span>
-          <p class="mt-6 text-sm font-medium text-black/60">
+          <p class="mt-6 text-sm font-medium text-black/60 dark:text-white/58">
             The next chapter
           </p>
-          <h3 class="mt-2 text-2xl font-black tracking-tight text-black sm:text-3xl">
+          <h3 class="mt-2 text-2xl font-black tracking-tight text-black dark:text-white sm:text-3xl">
             Where the path could lead
           </h3>
-          <p class="mt-3 leading-7 text-black/58">
+          <p class="mt-3 leading-7 text-black/58 dark:text-white/56">
             Two directions I am considering now, alongside the academic route
             I had planned before.
           </p>
@@ -344,18 +348,18 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
                   class="roadmap-future-branch"
                 >
                   <article
-                    class="roadmap-future-card rounded-lg border border-black/9 bg-white p-6 shadow-[0_16px_38px_rgba(0,0,0,0.06)] sm:p-7"
+                    class="roadmap-future-card rounded-lg border border-black/9 bg-white p-6 shadow-[0_16px_38px_rgba(0,0,0,0.06)] dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_16px_38px_rgba(0,0,0,0.62)] sm:p-7"
                   >
-                    <div class="flex h-11 w-11 items-center justify-center rounded-md border border-black/8 bg-black text-white">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-md border border-black/8 bg-black text-white dark:border-white dark:bg-white dark:text-black">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
-                    <p class="mt-6 text-sm font-medium text-black/60">
+                    <p class="mt-6 text-sm font-medium text-black/60 dark:text-white/58">
                       Possible path
                     </p>
-                    <h4 class="mt-2 text-2xl font-bold tracking-tight text-black">
+                    <h4 class="mt-2 text-2xl font-bold tracking-tight text-black dark:text-white">
                       {path.title}
                     </h4>
-                    <p class="mt-3 leading-7 text-black/58">
+                    <p class="mt-3 leading-7 text-black/58 dark:text-white/56">
                       {path.description}
                     </p>
                   </article>
@@ -416,17 +420,17 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
             aria-labelledby="earlier-plan-heading"
           >
             <header
-              class="roadmap-academic-root rounded-lg border border-dotted border-black/35 bg-white/45 p-6 sm:p-7"
+              class="roadmap-academic-root rounded-lg border border-dotted border-black/35 bg-white/45 p-6 dark:border-white/30 dark:bg-white/4 sm:p-7"
             >
-              <div class="flex h-11 w-11 items-center justify-center rounded-md border border-dotted border-black/35 bg-black/[0.035] text-black/68">
+              <div class="flex h-11 w-11 items-center justify-center rounded-md border border-dotted border-black/35 bg-black/[0.035] text-black/68 dark:border-white/30 dark:bg-white/6 dark:text-white/68">
                 <GraduationCap className="h-5 w-5" aria-hidden="true" />
               </div>
-              <p class="mt-6 text-sm font-medium text-black/60">
+              <p class="mt-6 text-sm font-medium text-black/60 dark:text-white/58">
                 Earlier plan
               </p>
               <h4
                 id="earlier-plan-heading"
-                class="mt-2 text-2xl font-bold tracking-tight text-black"
+                class="mt-2 text-2xl font-bold tracking-tight text-black dark:text-white"
               >
                 The academic route
               </h4>
@@ -437,12 +441,12 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
                 academicSteps.map((step, index) => (
                   <li class="academic-step" data-roadmap-academic-step={index}>
                     <div
-                      class="rounded-md border border-dotted border-black/30 bg-white/35 px-4 py-3"
+                      class="rounded-md border border-dotted border-black/30 bg-white/35 px-4 py-3 dark:border-white/26 dark:bg-white/4"
                     >
-                      <p class="font-semibold text-black/76">{step.title}</p>
+                      <p class="font-semibold text-black/76 dark:text-white/74">{step.title}</p>
                       {
                         step.detail && (
-                          <p class="mt-1 text-sm leading-5 text-black/58">
+                          <p class="mt-1 text-sm leading-5 text-black/58 dark:text-white/54">
                             {step.detail}
                           </p>
                         )
@@ -825,6 +829,35 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
   .roadmap-measuring .roadmap-future-heading > :not(.roadmap-junction) {
     filter: none !important;
     transform: none !important;
+  }
+
+  :global(html.dark) .roadmap-route-track {
+    stroke: rgba(255, 255, 255, 0.1);
+  }
+
+  :global(html.dark) .roadmap-route-track-dotted {
+    stroke: rgba(255, 255, 255, 0.15);
+  }
+
+  :global(html.dark) .roadmap-route-live {
+    stroke: rgba(255, 255, 255, 0.68);
+  }
+
+  :global(html.dark) .roadmap-route-live-dotted {
+    stroke: rgba(255, 255, 255, 0.58);
+  }
+
+  :global(html.dark) .roadmap-node {
+    border-color: rgba(255, 255, 255, 0.16);
+    background: #0a0a0a;
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.96);
+    color: rgba(255, 255, 255, 0.58);
+  }
+
+  :global(html.dark) .roadmap-step-current .roadmap-node {
+    border-color: #fff;
+    background: #fff;
+    color: #0a0a0a;
   }
 
   @media (min-width: 768px) {

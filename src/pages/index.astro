@@ -100,7 +100,19 @@ const stack = [
             decoding="async"
             draggable="false"
             sizes="44vw"
-            class="h-auto w-[min(44vw,880px)] select-none object-contain opacity-95 drop-shadow-[0_38px_54px_rgba(0,0,0,0.22)]"
+            class="h-auto w-[min(44vw,880px)] select-none object-contain opacity-95 drop-shadow-[0_38px_54px_rgba(0,0,0,0.22)] dark:hidden"
+          />
+          <img
+            src="/admingod_white_transparent.png"
+            alt="AdminGod logo"
+            width="1254"
+            height="1254"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            draggable="false"
+            sizes="44vw"
+            class="hidden h-auto w-[min(44vw,880px)] select-none object-contain opacity-90 drop-shadow-[0_38px_54px_rgba(0,0,0,0.7)] dark:block"
           />
         </aside>
 
@@ -111,13 +123,13 @@ const stack = [
               eyebrow="Hi there, I call myself"
               title="AdminGod"
               description="and I love building software and hosting it myself."
-              titleClassName="max-w-4xl text-[clamp(4rem,10vw,9rem)] font-black leading-[0.84] tracking-normal text-[#0c0c0c]"
-              descriptionClassName="mt-8 max-w-2xl text-xl leading-8 text-black/68 sm:text-2xl sm:leading-9"
+              titleClassName="max-w-4xl text-[clamp(4rem,10vw,9rem)] font-black leading-[0.84] tracking-normal text-[#0c0c0c] dark:text-white"
+              descriptionClassName="mt-8 max-w-2xl text-xl leading-8 text-black/68 dark:text-white/68 sm:text-2xl sm:leading-9"
               actionsClassName="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <a
                 href="/contact"
-                class="inline-flex h-12 select-none items-center justify-center gap-2 border border-black bg-black px-5 text-sm font-semibold text-white transition-colors hover:bg-[#242424]"
+                class="inline-flex h-12 select-none items-center justify-center gap-2 border border-black bg-black px-5 text-sm font-semibold text-white transition-colors hover:bg-[#242424] dark:border-white dark:bg-white dark:text-black dark:hover:bg-[#d9d9d9]"
               >
                 <Mail className="h-4 w-4" aria-hidden="true" />
                 Contact me
@@ -126,7 +138,7 @@ const stack = [
                 href="https://github.com/AdminGodZ"
                 target="_blank"
                 rel="noreferrer"
-                class="inline-flex h-12 select-none items-center justify-center gap-2 border border-black/12 bg-white/60 px-5 text-sm font-semibold text-black backdrop-blur-md transition-colors hover:border-black/25 hover:bg-white"
+                class="inline-flex h-12 select-none items-center justify-center gap-2 border border-black/12 bg-white/60 px-5 text-sm font-semibold text-black backdrop-blur-md transition-colors hover:border-black/25 hover:bg-white dark:border-white/14 dark:bg-white/6 dark:text-white dark:hover:border-white/28 dark:hover:bg-white/11"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -160,7 +172,19 @@ const stack = [
               decoding="async"
               draggable="false"
               sizes="88vw"
-              class="h-auto w-full max-w-[560px] select-none object-contain drop-shadow-[0_34px_48px_rgba(0,0,0,0.2)]"
+              class="h-auto w-full max-w-[560px] select-none object-contain drop-shadow-[0_34px_48px_rgba(0,0,0,0.2)] dark:hidden"
+            />
+            <img
+              src="/admingod_white_transparent.png"
+              alt="AdminGod logo"
+              width="1254"
+              height="1254"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              draggable="false"
+              sizes="88vw"
+              class="hidden h-auto w-full max-w-[560px] select-none object-contain opacity-90 drop-shadow-[0_34px_48px_rgba(0,0,0,0.7)] dark:block"
             />
           </aside>
         </div>
@@ -181,15 +205,15 @@ const stack = [
             data-scroll-reveal="heading"
             class="mb-8 flex items-center gap-5"
           >
-            <h2 class="shrink-0 text-lg font-semibold text-black/76">
+            <h2 class="shrink-0 text-lg font-semibold text-black/76 dark:text-white/76">
               Built projects
             </h2>
-            <div class="h-px flex-1 bg-black/10" />
+            <div class="h-px flex-1 bg-black/10 dark:bg-white/12" />
           </div>
 
           <div class="grid gap-5 lg:grid-cols-3">
             {projects.map((project, index) => {
-              const cardClassName = `project-card group relative flex min-h-[230px] overflow-hidden rounded-lg border border-black/8 bg-white p-6 text-left no-underline shadow-[0_18px_38px_rgba(0,0,0,0.08)] ring-1 ring-white/80 sm:min-h-[260px] ${project.href ? "cursor-pointer" : ""}`;
+              const cardClassName = `project-card group relative flex min-h-[230px] overflow-hidden rounded-lg border border-black/8 bg-white p-6 text-left no-underline shadow-[0_18px_38px_rgba(0,0,0,0.08)] ring-1 ring-white/80 dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 sm:min-h-[260px] ${project.href ? "cursor-pointer" : ""}`;
               const revealStyle = `--scroll-reveal-delay: ${index * 90}ms`;
               const cardContent = (
                 <>
@@ -204,18 +228,18 @@ const stack = [
                       decoding="async"
                       draggable="false"
                       sizes="(min-width: 1024px) 33vw, 100vw"
-                      class="project-card-image project-card-image-uniform pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.92]"
+                      class="project-card-image project-card-image-uniform pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.92] dark:opacity-60"
                     />
                   ) : null}
-                  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)]" />
-                  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90" />
+                  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(10,10,10,0.34)_42%,rgba(10,10,10,0.98)_100%)]" />
+                  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90 dark:bg-white/8" />
                   <div class="relative z-10 mt-auto flex w-full items-end justify-between gap-5">
                     <div>
-                      <h3 class="text-3xl font-black tracking-tight text-black">
+                      <h3 class="text-3xl font-black tracking-tight text-black dark:text-white">
                         {project.name}
                       </h3>
                       {project.name !== "Under Construction" ? (
-                        <p class="mt-1 text-sm font-semibold text-black/56">
+                        <p class="mt-1 text-sm font-semibold text-black/56 dark:text-white/58">
                           {project.type}
                         </p>
                       ) : null}
@@ -225,7 +249,7 @@ const stack = [
                     </div>
                     {project.name !== "Under Construction" ? (
                       <ArrowUpRight
-                        className="project-card-arrow h-5 w-5 shrink-0 text-black"
+                        className="project-card-arrow h-5 w-5 shrink-0 text-black dark:text-white"
                         aria-hidden="true"
                       />
                     ) : null}
@@ -274,10 +298,10 @@ const stack = [
             data-scroll-reveal="heading"
             class="mb-8 flex items-center gap-5"
           >
-            <h2 class="shrink-0 text-lg font-semibold text-black/76">
+            <h2 class="shrink-0 text-lg font-semibold text-black/76 dark:text-white/76">
               Tools I work with
             </h2>
-            <div class="h-px flex-1 bg-black/10" />
+            <div class="h-px flex-1 bg-black/10 dark:bg-white/12" />
           </div>
 
           <ul class="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -285,21 +309,21 @@ const stack = [
               <li
                 data-scroll-reveal="card"
                 style={`--scroll-reveal-delay: ${(index % 4) * 70}ms`}
-                class="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-lg border border-black/8 bg-white p-5 shadow-[0_18px_38px_rgba(0,0,0,0.06)] ring-1 ring-white/80 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black/16 hover:shadow-[0_24px_46px_rgba(0,0,0,0.1)]"
+                class="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-lg border border-black/8 bg-white p-5 shadow-[0_18px_38px_rgba(0,0,0,0.06)] ring-1 ring-white/80 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black/16 hover:shadow-[0_24px_46px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 dark:hover:border-white/20 dark:hover:shadow-[0_24px_46px_rgba(0,0,0,0.72)]"
               >
-                <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0)_36%,rgba(0,0,0,0.035)_100%)]" />
+                <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0)_36%,rgba(0,0,0,0.035)_100%)] dark:bg-[linear-gradient(145deg,rgba(255,255,255,0.025)_0%,rgba(255,255,255,0)_55%)]" />
                 <svg
                   viewBox="0 0 24 24"
-                  class="pointer-events-none absolute -top-7 -right-7 h-32 w-32 fill-current text-black/[0.035] transition-transform duration-500 group-hover:scale-110"
+                  class="pointer-events-none absolute -top-7 -right-7 h-32 w-32 fill-current text-black/[0.035] transition-transform duration-500 group-hover:scale-110 dark:text-white/[0.035]"
                   aria-hidden="true"
                 >
                   <path d={item.icon.path} />
                 </svg>
 
-                <div class="relative flex h-14 w-14 items-center justify-center rounded-md border border-black/8 bg-black/[0.025]">
+                <div class="relative flex h-14 w-14 items-center justify-center rounded-md border border-black/8 bg-black/[0.025] dark:border-white/10 dark:bg-white/6">
                   <svg
                     viewBox="0 0 24 24"
-                    class="h-8 w-8 fill-current text-black/78"
+                    class="h-8 w-8 fill-current text-black/78 dark:text-white/82"
                     aria-hidden="true"
                   >
                     <path d={item.icon.path} />
@@ -307,15 +331,15 @@ const stack = [
                 </div>
 
                 <div class="relative mt-8">
-                  <h3 class="text-lg font-bold text-black">{item.name}</h3>
-                  <p class="mt-1 text-sm text-black/60">{item.type}</p>
+                  <h3 class="text-lg font-bold text-black dark:text-white">{item.name}</h3>
+                  <p class="mt-1 text-sm text-black/60 dark:text-white/58">{item.type}</p>
                 </div>
               </li>
             ))}
           </ul>
         </div>
       </section>
-      <footer class="border-t border-black bg-[#0d0d0d] px-5 py-14 text-white sm:px-8 lg:px-12">
+      <footer class="border-t border-black bg-[#0d0d0d] px-5 py-14 text-white dark:border-white/10 dark:bg-[#050505] sm:px-8 lg:px-12">
         <div class="mx-auto max-w-7xl">
           <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
             <div data-scroll-reveal="footer" class="max-w-lg">
