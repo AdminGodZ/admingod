@@ -1,0 +1,250 @@
+---
+const twinklingStars = [
+  { x: 5, y: 18, size: 1.5, duration: 11, delay: -3, driftX: 3, driftY: -2 },
+  { x: 11, y: 49, size: 1.1, duration: 15, delay: -9, driftX: -2, driftY: 3 },
+  { x: 18, y: 77, size: 1.3, duration: 9, delay: -5, driftX: 2, driftY: 2 },
+  { x: 25, y: 7, size: 1.2, duration: 14, delay: -12, driftX: -3, driftY: 1 },
+  { x: 31, y: 34, size: 1.8, duration: 12, delay: -7, driftX: 2, driftY: -3 },
+  { x: 37, y: 66, size: 1.2, duration: 17, delay: -14, driftX: 3, driftY: 2 },
+  { x: 44, y: 91, size: 1.4, duration: 10, delay: -2, driftX: -2, driftY: -2 },
+  { x: 51, y: 45, size: 1.1, duration: 13, delay: -10, driftX: 2, driftY: 3 },
+  { x: 57, y: 15, size: 1.3, duration: 16, delay: -6, driftX: -3, driftY: -2 },
+  { x: 63, y: 78, size: 1.6, duration: 11, delay: -8, driftX: 3, driftY: -1 },
+  { x: 69, y: 31, size: 1.2, duration: 14, delay: -4, driftX: -2, driftY: 2 },
+  { x: 75, y: 58, size: 1.7, duration: 9, delay: -7, driftX: 2, driftY: -3 },
+  { x: 81, y: 9, size: 1.1, duration: 15, delay: -13, driftX: 3, driftY: 2 },
+  { x: 87, y: 40, size: 1.4, duration: 12, delay: -1, driftX: -3, driftY: -1 },
+  { x: 92, y: 71, size: 1.2, duration: 16, delay: -11, driftX: 2, driftY: 3 },
+  { x: 97, y: 24, size: 1.5, duration: 10, delay: -6, driftX: -2, driftY: -2 },
+];
+
+const shootingStars = [
+  {
+    x: -16,
+    y: 12,
+    duration: 37,
+    delay: -9,
+    distance: 68,
+    drop: 29,
+    angle: 23,
+    trail: 118,
+  },
+  {
+    x: 48,
+    y: -5,
+    duration: 53,
+    delay: -34,
+    distance: 52,
+    drop: 22,
+    angle: 23,
+    trail: 92,
+  },
+];
+---
+
+<div class="living-starfield" aria-hidden="true">
+  {
+    twinklingStars.map((star) => (
+      <span
+        class="living-starfield__twinkle"
+        style={`--star-x:${star.x}%;--star-y:${star.y}%;--star-size:${star.size}px;--star-duration:${star.duration}s;--star-delay:${star.delay}s;--star-drift-x:${star.driftX}px;--star-drift-y:${star.driftY}px;`}
+      />
+    ))
+  }
+
+  {
+    shootingStars.map((star) => (
+      <span
+        class="living-starfield__shooting-star"
+        style={`--shooting-x:${star.x}%;--shooting-y:${star.y}%;--shooting-duration:${star.duration}s;--shooting-delay:${star.delay}s;--shooting-distance:${star.distance}vw;--shooting-drop:${star.drop}vw;--shooting-angle:${star.angle}deg;--shooting-trail:${star.trail}px;`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .living-starfield {
+    --living-star-color: 15 23 42;
+    --living-shooting-core-color: 15 23 42;
+    --living-shooting-tail-color: 37 99 235;
+
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :global(html.dark) .living-starfield {
+    --living-star-color: 255 255 255;
+    --living-shooting-core-color: 255 255 255;
+    --living-shooting-tail-color: 147 197 253;
+  }
+
+  .living-starfield__twinkle {
+    position: absolute;
+    top: var(--star-y);
+    left: var(--star-x);
+    width: var(--star-size);
+    height: var(--star-size);
+    border-radius: 999px;
+    background: rgb(var(--living-star-color) / 88%);
+    box-shadow: 0 0 7px rgb(var(--living-star-color) / 32%);
+    opacity: 0.08;
+    transform: scale(0.72);
+    animation: living-starfield-twinkle var(--star-duration) ease-in-out
+      var(--star-delay) infinite;
+  }
+
+  .living-starfield__shooting-star {
+    position: absolute;
+    top: var(--shooting-y);
+    left: var(--shooting-x);
+    width: clamp(72px, var(--shooting-trail), 128px);
+    height: 3px;
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--shooting-angle));
+    transform-origin: right center;
+    will-change: opacity, transform;
+    animation: living-starfield-shoot var(--shooting-duration) linear
+      var(--shooting-delay) infinite;
+  }
+
+  .living-starfield__shooting-star::before {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(var(--living-shooting-tail-color) / 3%) 22%,
+      rgb(var(--living-shooting-tail-color) / 20%) 68%,
+      rgb(var(--living-shooting-core-color) / 92%) 100%
+    );
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+    content: "";
+    filter: drop-shadow(
+      0 0 3px rgb(var(--living-shooting-tail-color) / 38%)
+    );
+  }
+
+  .living-starfield__shooting-star::after {
+    position: absolute;
+    top: 50%;
+    right: -2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgb(var(--living-shooting-core-color));
+    box-shadow:
+      0 0 3px rgb(var(--living-shooting-core-color) / 95%),
+      0 0 8px rgb(var(--living-shooting-tail-color) / 72%),
+      0 0 15px rgb(var(--living-shooting-tail-color) / 34%);
+    content: "";
+    transform: translateY(-50%);
+  }
+
+  @keyframes living-starfield-twinkle {
+    0%,
+    100% {
+      opacity: 0.08;
+      transform: translate3d(0, 0, 0) scale(0.72);
+    }
+
+    66%,
+    78% {
+      opacity: 0.08;
+      transform: translate3d(
+          var(--star-drift-x),
+          var(--star-drift-y),
+          0
+        )
+        scale(0.72);
+    }
+
+    69% {
+      opacity: 0.38;
+      transform: translate3d(
+          var(--star-drift-x),
+          var(--star-drift-y),
+          0
+        )
+        scale(1.08);
+    }
+
+    71% {
+      opacity: 0.96;
+      transform: translate3d(
+          var(--star-drift-x),
+          var(--star-drift-y),
+          0
+        )
+        scale(1.72);
+    }
+
+    73% {
+      opacity: 0.18;
+      transform: translate3d(
+          var(--star-drift-x),
+          var(--star-drift-y),
+          0
+        )
+        scale(0.9);
+    }
+
+    75% {
+      opacity: 0.72;
+      transform: translate3d(
+          var(--star-drift-x),
+          var(--star-drift-y),
+          0
+        )
+        scale(1.38);
+    }
+  }
+
+  @keyframes living-starfield-shoot {
+    0%,
+    84% {
+      opacity: 0;
+      transform: translate3d(0, 0, 0) rotate(var(--shooting-angle));
+    }
+
+    84.35% {
+      opacity: 0.2;
+    }
+
+    85% {
+      opacity: 0.92;
+    }
+
+    87.25% {
+      opacity: 0.78;
+    }
+
+    88.5% {
+      opacity: 0;
+      transform: translate3d(
+          var(--shooting-distance),
+          var(--shooting-drop),
+          0
+        )
+        rotate(var(--shooting-angle));
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(
+          var(--shooting-distance),
+          var(--shooting-drop),
+          0
+        )
+        rotate(var(--shooting-angle));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .living-starfield {
+      display: none;
+    }
+  }
+</style>
