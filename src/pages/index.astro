@@ -21,7 +21,6 @@ import LivingStarfield from "@/components/portfolio/living-starfield.astro";
 import ScrollReveal from "@/components/portfolio/scroll-reveal.astro";
 import ScrollSidebar from "@/components/portfolio/scroll-sidebar";
 import VoidParticleField from "@/components/portfolio/void-particle-field";
-import VoidParticleTransition from "@/components/portfolio/void-particle-transition.astro";
 import ResearchCard from "@/components/research/research-card.astro";
 import Layout from "@/layouts/layout.astro";
 import { getResearch } from "@/lib/research";
@@ -87,7 +86,6 @@ const featuredResearch = (
 
       <section class="relative z-[1] flex min-h-[100svh] items-center overflow-hidden px-5 py-8 sm:px-8 lg:px-12">
         <div class="portfolio-void-bg absolute inset-0" />
-        <div class="void-scanline" />
         <VoidParticleField
           client:load
           className="void-particle-canvas pointer-events-none absolute bottom-0 left-1/2 h-[54vh] w-screen max-w-none -translate-x-1/2"
@@ -200,7 +198,6 @@ const featuredResearch = (
           class="hero-section-dissolve pointer-events-none absolute inset-x-0 bottom-0 z-[6] h-[30vh]"
           aria-hidden="true"
         />
-        <VoidParticleTransition />
       </section>
 
       <section

@@ -323,23 +323,6 @@ body {
   }
 }
 
-@keyframes scan-sweep {
-  0% {
-    transform: translateY(-8%);
-    opacity: 0;
-  }
-  12% {
-    opacity: 0.45;
-  }
-  88% {
-    opacity: 0.45;
-  }
-  100% {
-    transform: translateY(108%);
-    opacity: 0;
-  }
-}
-
 @keyframes void-portal-float {
   0% {
     transform: translate3d(0, 0, 0);
@@ -434,20 +417,6 @@ body {
     animation-iteration-count: infinite;
   }
 
-  .void-scanline {
-    position: absolute;
-    inset: -20% 0 auto 0;
-    height: 180px;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(230, 230, 230, 0.5),
-      rgba(255, 255, 255, 0)
-    );
-    filter: blur(8px);
-    animation: scan-sweep 14s ease-in-out infinite;
-  }
-
   .void-portal {
     background:
       radial-gradient(
@@ -513,17 +482,13 @@ body {
       to bottom,
       transparent 0%,
       #000 12%,
-      #000 74%,
-      rgba(0, 0, 0, 0.58) 87%,
-      transparent 100%
+      #000 100%
     );
     mask-image: linear-gradient(
       to bottom,
       transparent 0%,
       #000 12%,
-      #000 74%,
-      rgba(0, 0, 0, 0.58) 87%,
-      transparent 100%
+      #000 100%
     );
   }
 
@@ -661,15 +626,6 @@ body {
 
   .dark .void-stream {
     color: #343434;
-  }
-
-  .dark .void-scanline {
-    background: linear-gradient(
-      to bottom,
-      rgb(255 255 255 / 0%),
-      rgb(255 255 255 / 10%),
-      rgb(255 255 255 / 0%)
-    );
   }
 
   .dark .void-portal {
