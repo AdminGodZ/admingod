@@ -6,16 +6,19 @@ interface Props {
   title?: string;
   description?: string;
   noIndex?: boolean;
+  pageType?: "website" | "article";
 }
 
 const {
   title = "AdminGod - Portfolio",
   description = "Portfolio of AdminGod, focused on practical full-stack engineering, automation, and polished web interfaces.",
   noIndex = false,
+  pageType = "website",
 } = Astro.props;
 
-const openGraphDescription =
-  "Practical full-stack engineering, automation, and polished web interfaces.";
+const canonicalUrl = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : Astro.url.toString();
 ---
 
 <!doctype html>
@@ -25,16 +28,19 @@ const openGraphDescription =
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     {noIndex && <meta name="robots" content="noindex" />}
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={openGraphDescription} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={pageType} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={openGraphDescription} />
+    <meta name="twitter:description" content={description} />
     <script is:inline>
       try {
         const savedTheme = localStorage.getItem("admingod-theme");

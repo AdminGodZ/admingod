@@ -1,0 +1,1063 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=30mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\hypersetup{
+  pdftitle={A 2/3 Lower Bound for Progression-Free Harmonic Sums in Terms of van der Waerden Numbers},
+  pdfauthor={Tim Held},
+  pdfsubject={Erdos Problem 169; arithmetic progressions; van der Waerden numbers; Kempner sets},
+  pdfkeywords={arithmetic progressions, van der Waerden numbers, harmonic sums, Kempner sets, additive combinatorics},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=blue,
+  urlcolor=blue
+}
+\urlstyle{same}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\Kemp}{\mathcal{K}}
+\newcommand{\diam}{\operatorname{diam}}
+
+\title{A \texorpdfstring{$2/3$}{2/3} Lower Bound for Progression-Free Harmonic Sums\\
+       in Terms of van der Waerden Numbers}
+\author{Tim Held\\[2pt]
+\small Independent researcher, Switzerland}
+\date{Version 1.0, August 28, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For an integer $k\ge 3$, let $f(k)$ be the supremum of
+$\sum_{n\in A}1/n$ over all sets $A$ of positive integers containing no
+$k$-term arithmetic progression, and let $W(k)=W(2,k)$ be the two-color
+van der Waerden number.  The classical coloring argument gives
+$f(k)\ge \tfrac12 H_{W(k)-1}$ and hence
+$\liminf_{k\to\infty} f(k)/\log W(k)\ge \tfrac12$.
+We prove the stronger explicit estimate
+\[
+ f(k)\ge
+ 1+\frac{2W(k)-3}{3W(k)-5}
+ \left(H_{W(k)-1}-\frac32\right),
+\]
+which implies
+\[
+ \liminf_{k\to\infty}\frac{f(k)}{\log W(k)}\ge \frac23.
+\]
+The proof starts with a two-coloring of $[W(k)-1]$ having no
+monochromatic $k$-term progression.  Each finite color class is normalized
+and used as the digit set of a shifted Kempner set in base $2W(k)-3$.
+A modular progression argument proves that the resulting infinite set is
+$k$-term-progression-free, while a leading-digit decomposition gives a
+geometric amplification of its harmonic sum.  A weighted averaging step
+then combines the two color classes.  We also give an $r$-color extension
+and a coloring-sensitive refinement.  The result is a strict improvement
+of the constant $1/2$, but it does not prove the stronger conjecture that
+$f(k)/\log W(k)\to\infty$.
+\end{abstract}
+
+\noindent\textbf{Status and scope.}
+This manuscript is a non-peer-reviewed preprint, and independent
+verification is welcomed.  The principal result is a partial advance on
+Erd\H{o}s Problem 169: it proves the weaker assertion that the classical
+constant $1/2$ can be replaced by a larger absolute constant, while leaving
+the stated limit-to-infinity problem open.  No claim is made here that the
+full problem has been solved.
+
+\medskip
+\noindent\textbf{2020 Mathematics Subject Classification.}
+Primary 11B25; Secondary 05D10, 11B05.
+
+\noindent\textbf{Keywords.}
+Arithmetic progressions, van der Waerden numbers, harmonic sums,
+Kempner sets, digit-restricted sets, additive combinatorics.
+
+\section{Introduction}
+
+A $k$-term arithmetic progression, abbreviated $k$-AP, is a set of the form
+\[
+ \{a,a+d,\ldots,a+(k-1)d\},
+ \qquad a,d\in\N,\ d>0.
+\]
+A set of positive integers is called \emph{$k$-AP-free} if it contains no
+such progression.  Define
+\begin{equation}\label{eq:def-f}
+ f(k):=\sup\left\{
+   \sum_{n\in A}\frac1n:
+   A\subseteq\N\text{ is $k$-AP-free}
+ \right\}.
+\end{equation}
+The finiteness of these quantities is tied to the Erd\H{o}s--Tur\'an
+conjecture on arithmetic progressions \cite{erdos-turan-1936,gerver-1977}.
+The present paper concerns only unconditional lower bounds, so no finiteness
+assumption is used.
+
+For integers $r\ge 2$ and $k\ge 2$, let $W(r,k)$ be the least positive
+integer $N$ such that every coloring of $[N]:=\{1,\ldots,N\}$ with $r$
+colors contains a monochromatic $k$-AP.  We write
+\[
+ W(k):=W(2,k).
+\]
+Van der Waerden's theorem guarantees that these numbers exist
+\cite{vanderwaerden-1927}.  Erd\H{o}s and Graham asked for estimates on
+$f(k)$ in terms of $W(k)$ and observed the elementary inequality
+\begin{equation}\label{eq:classical-half-intro}
+ f(k)\ge \frac12 H_{W(k)-1},
+\end{equation}
+where $H_N:=\sum_{n=1}^N1/n$ is the $N$th harmonic number.  In particular,
+\[
+ \liminf_{k\to\infty}\frac{f(k)}{\log W(k)}\ge\frac12.
+\]
+They explicitly asked whether the constant $1/2$ could be increased, and
+more strongly whether
+\begin{equation}\label{eq:erdos-question}
+ \lim_{k\to\infty}\frac{f(k)}{\log W(k)}=\infty.
+\end{equation}
+See \cite{erdos-graham-1979,erdos-graham-1980,erdos-problems-169}.
+Berlekamp obtained the linear lower bound
+\[
+ f(k)\ge \frac{\log 2}{2}\,k,
+\]
+and Gerver later proved the stronger asymptotic estimate
+\begin{equation}\label{eq:gerver}
+ f(k)\ge (1-o(1))k\log k
+\end{equation}
+\cite{berlekamp-1968,gerver-1977}.  The estimate in this paper addresses a
+different scale: it specifically improves the coefficient attached to
+$\log W(k)$.
+
+Our main theorem is the following.
+
+\begin{theorem}[Main theorem]\label{thm:main}
+For every integer $k\ge 3$,
+\begin{equation}\label{eq:main-exact}
+ f(k)\ge
+ 1+\frac{2W(k)-3}{3W(k)-5}
+ \left(H_{W(k)-1}-\frac32\right).
+\end{equation}
+Consequently,
+\begin{equation}\label{eq:main-asymptotic}
+ \liminf_{k\to\infty}\frac{f(k)}{\log W(k)}\ge\frac23.
+\end{equation}
+\end{theorem}
+
+The original derivation of the argument gave the slightly weaker but still
+sufficient estimate
+\begin{equation}\label{eq:advertised-bound}
+ f(k)\ge
+ 1+\frac{2W(k)-3}{3W(k)-5}
+ \left(H_{W(k)-1}-2\right).
+\end{equation}
+Keeping track of the distinct minima of the two color classes replaces the
+constant $2$ by $3/2$, producing \cref{eq:main-exact}.
+
+The mechanism is simple.  Begin with a two-coloring of
+$[W(k)-1]$ having no monochromatic $k$-AP.  Normalize a color class $C$ by
+subtracting its minimum, and use the resulting finite set as the allowed
+base-$b$ digits of a Kempner set.  If $b$ is greater than twice the diameter
+of $C$, ordinary $k$-AP-freeness implies modular $k$-AP-freeness.  A
+base-$b$ descent then shows that the infinite digit-restricted set is
+$k$-AP-free.  Its successive digit layers contribute a geometric series to
+the harmonic sum, with ratio $|C|/b$.  Applying this construction to both
+color classes and averaging the two resulting bounds yields the constant
+$2/3$.
+
+Digit-restricted harmonic series originate with Kempner's classical example
+\cite{kempner-1914}.  The relevant facts about progression-free digit sets
+are closely related to the framework developed by Walker and Walker
+\cite{walker-walker-2020} and by Walker \cite{walker-2025}.  Complete proofs
+are included here so that the present argument is self-contained.
+
+\section{Notation and elementary inequalities}
+
+Throughout, $k\ge 3$ unless stated otherwise.  For a set
+$A\subseteq\N$, write
+\[
+ \HH(A):=\sum_{a\in A}\frac1a
+\]
+with the value $+\infty$ permitted.  For a nonempty finite set $C$ of
+integers, define
+\[
+ |C|=\text{its cardinality},\qquad
+ \diam(C):=\max C-\min C.
+\]
+Translations preserve arithmetic progressions: $C$ is $k$-AP-free if and
+only if $C+t$ is $k$-AP-free for every integer $t$.
+
+We will repeatedly use a weighted averaging inequality.
+
+\begin{lemma}[Weighted maximum]\label{lem:weighted-max}
+Let $u_1,\ldots,u_q\in\mathbb{R}$ and let $d_1,\ldots,d_q>0$.  Then
+\begin{equation}\label{eq:weighted-max}
+ \max_{1\le i\le q}\frac{u_i}{d_i}
+ \ge
+ \frac{\sum_{i=1}^q u_i}{\sum_{i=1}^q d_i}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The quotient on the right is the weighted average
+\[
+ \frac{\sum_i d_i(u_i/d_i)}{\sum_i d_i}
+\]
+of the numbers $u_i/d_i$, with positive weights $d_i$.  A weighted average
+cannot exceed the largest entry.  No sign condition on the $u_i$ is needed.
+\end{proof}
+
+For later limit arguments, note also that
+\begin{equation}\label{eq:W-elementary-growth}
+ W(r,k)\ge k+1
+ \qquad (r\ge2,\ k\ge3).
+\end{equation}
+Indeed, color the interval $[k]$ with at least two colors.  Its only
+$k$-term arithmetic progression is the whole interval $[k]$, which is not
+monochromatic.  Thus $W(r,k)>k$.
+
+We also record the standard harmonic-number asymptotic
+\begin{equation}\label{eq:harmonic-asymptotic}
+ H_N=\log N+\gamma+O(N^{-1}),
+\end{equation}
+where $\gamma$ is the Euler--Mascheroni constant.
+
+\section{The classical \texorpdfstring{$1/2$}{1/2} bound}
+
+The starting point is the short coloring argument of Erd\H{o}s and Graham.
+
+\begin{proposition}\label{prop:classical-half}
+For every $k\ge 3$,
+\[
+ f(k)\ge \frac12 H_{W(k)-1}.
+\]
+Consequently,
+\[
+ \liminf_{k\to\infty}\frac{f(k)}{\log W(k)}\ge\frac12.
+\]
+\end{proposition}
+
+\begin{proof}
+Put $N=W(k)-1$.  By the minimality of $W(k)$, there is a two-coloring
+\[
+ [N]=C_0\sqcup C_1
+\]
+with no monochromatic $k$-AP.  Thus both $C_0$ and $C_1$ are $k$-AP-free.
+Moreover,
+\[
+ \HH(C_0)+\HH(C_1)=H_N.
+\]
+At least one of the two sums is at least $H_N/2$, and that color class is
+admissible in the definition of $f(k)$.  This proves the finite inequality.
+The asymptotic statement follows from \cref{eq:harmonic-asymptotic} and
+$W(k)\to\infty$.
+\end{proof}
+
+The rest of the paper amplifies the harmonic sum of each finite color class
+before the final averaging step.
+
+\section{Modular arithmetic progressions and Kempner sets}
+
+\subsection{Progressions modulo a base}
+
+\begin{definition}\label{def:modular-free}
+Let $b\ge 2$ and $S\subseteq\{0,1,\ldots,b-1\}$.  We say that $S$ contains
+a \emph{$k$-term arithmetic progression modulo $b$} if there are integers
+$x$ and $\Delta$ with $b\nmid\Delta$ such that
+\[
+ x+j\Delta\pmod b\in S
+ \qquad (j=0,1,\ldots,k-1).
+\]
+If no such pair exists, $S$ is called \emph{$k$-AP-free modulo $b$}.
+\end{definition}
+
+The difference $\Delta$ need not be coprime to $b$, and the residues need
+not be distinct.  This is the notion needed for the digit descent below.
+
+\begin{proposition}[Large-base modular freeness]\label{prop:large-base}
+Let $S\subseteq[0,M]$ be an ordinary $k$-AP-free set.  If $b>2M$, then
+$S$ is $k$-AP-free modulo $b$.
+\end{proposition}
+
+\begin{proof}
+Assume for contradiction that there are $x$ and $\Delta$ as in
+\cref{def:modular-free}.  Replacing $\Delta$ by its least positive residue,
+we may suppose
+\[
+ 1\le \delta\le b-1,
+ \qquad \delta\equiv\Delta\pmod b.
+\]
+Let
+\[
+ r_j\in S\subseteq[0,M]
+\]
+be the least nonnegative residue of $x+j\delta$ modulo $b$.  Since
+$0<\delta<b$, each successive difference is either
+\[
+ r_{j+1}-r_j=\delta
+ \quad\text{or}\quad
+ r_{j+1}-r_j=\delta-b.
+\]
+If a step of the first type occurs, then $\delta\le M$, because both
+residues lie in $[0,M]$.  If a step of the second type occurs, then
+$b-\delta\le M$.
+
+If both step types occur, then
+\[
+ b=\delta+(b-\delta)\le 2M,
+\]
+contrary to $b>2M$.  Hence every step has the same type.  If all steps are
+$+\delta$, then $r_0,r_1,\ldots,r_{k-1}$ is an ordinary increasing $k$-AP
+in $S$.  If all steps are $\delta-b$, then the same residues, read in reverse
+order, form an ordinary increasing $k$-AP in $S$.  Both alternatives
+contradict the assumed $k$-AP-freeness of $S$.
+\end{proof}
+
+\subsection{Digit-restricted sets}
+
+\begin{definition}[Kempner set]\label{def:kempner}
+Let $b\ge 2$ and let $S\subseteq\{0,1,\ldots,b-1\}$ with $0\in S$.  The
+associated Kempner set is
+\[
+ \Kemp(S,b):=
+ \left\{
+   \sum_{j=0}^{L} a_jb^j:
+   L\ge 0,\ a_j\in S
+ \right\}.
+\]
+Equivalently, $\Kemp(S,b)$ is the set of nonnegative integers all of whose
+canonical base-$b$ digits belong to $S$.
+\end{definition}
+
+\begin{theorem}[Digit descent]\label{thm:digit-descent}
+If $S$ is $k$-AP-free modulo $b$ and $0\in S$, then $\Kemp(S,b)$ is
+ordinary $k$-AP-free.  Consequently, $\Kemp(S,b)+1$ is a $k$-AP-free set of
+positive integers.
+\end{theorem}
+
+\begin{proof}
+Suppose, toward a contradiction, that
+\[
+ x,x+d,\ldots,x+(k-1)d
+\]
+is contained in $\Kemp(S,b)$, where $d>0$.  Let $t\ge 0$ be the largest
+integer for which $b^t\mid d$.  We remove $t$ common terminal digits.
+
+If $b\mid d$, all progression terms have the same units digit, say
+$a_0\in S$.  After subtracting $a_0$ from every term and dividing by $b$,
+we obtain another $k$-AP contained in $\Kemp(S,b)$, now with common
+difference $d/b$.  Repeating this operation exactly $t$ times produces a
+$k$-AP in $\Kemp(S,b)$ whose common difference $d'=d/b^t$ is not divisible
+by $b$.
+
+Reducing the final progression modulo $b$ gives
+\[
+ x'+jd'\pmod b\in S
+ \qquad (j=0,\ldots,k-1),
+\]
+with $b\nmid d'$.  This is a $k$-term arithmetic progression modulo $b$ in
+$S$, contradicting the hypothesis.  Therefore $\Kemp(S,b)$ is $k$-AP-free.
+Translation by $1$ preserves arithmetic progressions, so
+$\Kemp(S,b)+1$ is also $k$-AP-free.
+\end{proof}
+
+Combining \cref{prop:large-base,thm:digit-descent} gives the form used later.
+
+\begin{corollary}[Finite seed to infinite set]\label{cor:finite-seed}
+Let $C$ be a nonempty finite $k$-AP-free set of integers.  Put
+\[
+ m=\min C,
+ \qquad
+ S=C-m,
+ \qquad
+ M=\diam(C).
+\]
+For every integer $b>2M$, the shifted Kempner set
+\[
+ \Kemp(S,b)+1
+\]
+is a $k$-AP-free set of positive integers.
+\end{corollary}
+
+\begin{proof}
+The translated set $S$ is ordinary $k$-AP-free, lies in $[0,M]$, and
+contains $0$.  Apply \cref{prop:large-base,thm:digit-descent}.
+\end{proof}
+
+\section{Harmonic-sum amplification}
+
+The next estimate is the quantitative component of the argument.
+
+\begin{proposition}[Leading-digit lower bound]\label{prop:leading-digit}
+Let $b\ge 2$, let $S\subsetneq\{0,1,\ldots,b-1\}$ contain $0$, and write
+$s=|S|$.  Then
+\begin{equation}\label{eq:leading-digit}
+ \HH(\Kemp(S,b)+1)
+ \ge
+ 1+\frac{\displaystyle
+     \sum_{a\in S\setminus\{0\}}\frac1{a+1}}
+          {\displaystyle 1-\frac{s}{b}}.
+\end{equation}
+In particular, the harmonic series of $\Kemp(S,b)+1$ converges whenever
+$s<b$.
+\end{proposition}
+
+\begin{proof}
+The element $0\in\Kemp(S,b)$ contributes $1$ after the shift by $1$.
+Now fix an integer $\ell\ge 1$ and consider the positive elements of
+$\Kemp(S,b)$ whose canonical base-$b$ expansion has exactly $\ell$ digits.
+Each such integer has a unique representation
+\[
+ n=ab^{\ell-1}+q,
+\]
+where
+\[
+ a\in S\setminus\{0\}
+\]
+is the leading digit and $q$ is an integer represented by $\ell-1$ digits
+from $S$, allowing leading zeroes in this lower block.  There are exactly
+$s^{\ell-1}$ choices for $q$.
+
+Since $0\le q\le b^{\ell-1}-1$, we have
+\[
+ n+1=ab^{\ell-1}+q+1
+ \le (a+1)b^{\ell-1}.
+\]
+Therefore
+\[
+ \frac1{n+1}
+ \ge
+ \frac{1}{(a+1)b^{\ell-1}}.
+\]
+Summing first over all $q$, then over all nonzero leading digits $a$, the
+contribution of the $\ell$-digit layer is at least
+\[
+ \left(\frac{s}{b}\right)^{\ell-1}
+ \sum_{a\in S\setminus\{0\}}\frac1{a+1}.
+\]
+Summing these lower bounds over $\ell\ge 1$ and adding the contribution of
+$0$ gives
+\[
+ \HH(\Kemp(S,b)+1)
+ \ge
+ 1+
+ \left(\sum_{a\in S\setminus\{0\}}\frac1{a+1}\right)
+ \sum_{j=0}^{\infty}\left(\frac{s}{b}\right)^j.
+\]
+Because $S$ is a proper subset of the $b$ possible digits, $s<b$, so the
+geometric series equals $(1-s/b)^{-1}$.  This proves
+\cref{eq:leading-digit}.  For completeness, convergence follows from a separate upper estimate.
+Every positive element in the $\ell$-digit layer is at least
+$b^{\ell-1}$, while that layer contains at most $s^\ell$ elements.
+Consequently its harmonic contribution after shifting is at most
+$b(s/b)^\ell$.  The sum of these upper bounds is geometric because
+$s<b$.
+\end{proof}
+
+For a finite seed $C$, it is convenient to introduce its normalized
+harmonic weight
+\begin{equation}\label{eq:phi-def}
+ \Phi(C):=
+ \sum_{c\in C}\frac1{c-\min C+1}.
+\end{equation}
+
+\begin{theorem}[Finite-seed amplification]\label{thm:seed-amplification}
+Let $C$ be a nonempty finite $k$-AP-free set of positive integers, and let
+$b$ be an integer satisfying
+\[
+ b>2\diam(C).
+\]
+Then
+\begin{equation}\label{eq:seed-amplification}
+ f(k)\ge
+ 1+\frac{\Phi(C)-1}{1-|C|/b}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let $m=\min C$ and $S=C-m$.  By \cref{cor:finite-seed}, the set
+$\Kemp(S,b)+1$ is $k$-AP-free.  Moreover,
+\[
+ \sum_{a\in S\setminus\{0\}}\frac1{a+1}
+ =
+ \sum_{c\in C\setminus\{m\}}\frac1{c-m+1}
+ =\Phi(C)-1.
+\]
+Applying \cref{prop:leading-digit} and then the definition of $f(k)$ gives
+\cref{eq:seed-amplification}.
+\end{proof}
+
+\begin{remark}\label{rem:shift-benefit}
+For every nonempty finite $C\subseteq\N$ with $m=\min C$,
+\begin{equation}\label{eq:phi-vs-h}
+ \Phi(C)
+ \ge
+ \HH(C)+1-\frac1m.
+\end{equation}
+Indeed, the term $c=m$ changes from $1/m$ to $1$, and every other
+denominator decreases from $c$ to $c-m+1\le c$.  The correction
+$1-1/m$ is the source of the improvement from $H_N-2$ to $H_N-3/2$ in the
+two-color theorem.
+\end{remark}
+
+\section{Amplifying a partition of an interval}
+
+We first state a coloring-sensitive form that retains the individual class
+sizes, spans, and normalized harmonic weights.
+
+\begin{proposition}[Coloring-sensitive partition bound]\label{prop:partition-sensitive}
+Suppose
+\[
+ [N]=C_1\sqcup\cdots\sqcup C_q
+\]
+is a partition into nonempty $k$-AP-free sets.  For each $i$, choose an
+integer $b_i>2\diam(C_i)$ and put
+\[
+ s_i=|C_i|,
+ \qquad
+ d_i=1-\frac{s_i}{b_i}.
+\]
+Then
+\begin{equation}\label{eq:partition-sensitive}
+ f(k)\ge
+ 1+\frac{\displaystyle\sum_{i=1}^q\bigl(\Phi(C_i)-1\bigr)}
+          {\displaystyle\sum_{i=1}^q\left(1-\frac{s_i}{b_i}\right)}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By \cref{thm:seed-amplification}, for every $i$,
+\[
+ f(k)\ge 1+\frac{\Phi(C_i)-1}{d_i}.
+\]
+The denominators $d_i$ are positive because
+$s_i\le\diam(C_i)+1<b_i$.  Taking the maximum over $i$ and applying
+\cref{lem:weighted-max} with $u_i=\Phi(C_i)-1$ proves
+\cref{eq:partition-sensitive}.
+\end{proof}
+
+For a universal estimate depending only on $N$ and the number of classes,
+we use a common safe base.
+
+\begin{theorem}[Universal partition amplification]\label{thm:partition-universal}
+Suppose
+\[
+ [N]=C_1\sqcup\cdots\sqcup C_q
+\]
+is a partition into $q\ge 1$ nonempty $k$-AP-free sets.  Then
+\begin{equation}\label{eq:partition-universal}
+ f(k)\ge
+ 1+\frac{H_N-H_q}{\displaystyle q-\frac{N}{2N-1}}
+ =
+ 1+\frac{2N-1}{(2q-1)N-q}\,(H_N-H_q).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Choose the common base
+\[
+ b=2N-1.
+\]
+For every class $C_i$,
+\[
+ \diam(C_i)\le N-1,
+\]
+so $b>2\diam(C_i)$.  Apply \cref{prop:partition-sensitive} with
+$b_i=b$ for all $i$.  Since $\sum_i s_i=N$, its denominator is
+\begin{equation}\label{eq:partition-denominator}
+ \sum_{i=1}^q\left(1-\frac{s_i}{b}\right)
+ =q-\frac{N}{b}
+ =q-\frac{N}{2N-1}.
+\end{equation}
+
+It remains to lower-bound the numerator.  Let
+\[
+ m_i=\min C_i.
+\]
+By \cref{eq:phi-vs-h},
+\[
+ \Phi(C_i)-1
+ \ge
+ \HH(C_i)-\frac1{m_i}.
+\]
+Summing over the partition gives
+\begin{equation}\label{eq:numerator-minima}
+ \sum_{i=1}^q\bigl(\Phi(C_i)-1\bigr)
+ \ge
+ H_N-\sum_{i=1}^q\frac1{m_i}.
+\end{equation}
+The minima $m_1,\ldots,m_q$ are distinct positive integers.  The sum of
+their reciprocals is therefore at most the sum of the reciprocals of the
+$q$ smallest positive integers:
+\begin{equation}\label{eq:minima-hq}
+ \sum_{i=1}^q\frac1{m_i}\le H_q.
+\end{equation}
+Combining \cref{eq:partition-denominator,eq:numerator-minima,eq:minima-hq}
+with \cref{eq:partition-sensitive} proves the first expression in
+\cref{eq:partition-universal}.  Multiplying numerator and denominator by
+$2N-1$ gives the second expression.
+\end{proof}
+
+\begin{remark}[The initially advertised estimate]\label{rem:advertised}
+If one uses only the cruder inequality $\Phi(C_i)\ge\HH(C_i)$, then the
+numerator in \cref{eq:partition-universal} is replaced by $H_N-q$.  For
+$q=2$, this gives exactly
+\[
+ f(k)\ge 1+\frac{2N-1}{3N-2}(H_N-2),
+\]
+which is the bound in the original proof sketch.  The minima argument costs
+nothing and improves $H_N-2$ to $H_N-H_2=H_N-3/2$.
+\end{remark}
+
+\section{Proof of the main theorem}
+
+\begin{proof}[Proof of \cref{thm:main}]
+Set
+\[
+ N=W(k)-1.
+\]
+By the definition of $W(k)$, there exists a two-coloring
+\[
+ [N]=C_0\sqcup C_1
+\]
+with neither color class containing a $k$-AP.  The two classes are nonempty:
+if one were empty, the other would equal $[N]$, which contains $k$
+consecutive integers and therefore a $k$-AP, since $N\ge k$.
+
+Apply \cref{thm:partition-universal} with $q=2$.  Since $H_2=3/2$,
+\[
+ f(k)
+ \ge
+ 1+\frac{2N-1}{3N-2}\left(H_N-\frac32\right).
+\]
+Substituting $N=W(k)-1$ yields
+\[
+ 2N-1=2W(k)-3,
+ \qquad
+ 3N-2=3W(k)-5,
+\]
+and therefore
+\[
+ f(k)\ge
+ 1+\frac{2W(k)-3}{3W(k)-5}
+ \left(H_{W(k)-1}-\frac32\right).
+\]
+This is \cref{eq:main-exact}.
+
+For the asymptotic consequence, note that $W(k)\ge k$, hence
+$W(k)\to\infty$.  With $N=W(k)-1$, we have
+\[
+ \frac{2N-1}{3N-2}\longrightarrow\frac23,
+ \qquad
+ \frac{H_N-3/2}{\log(N+1)}\longrightarrow 1
+\]
+by \cref{eq:harmonic-asymptotic}.  Dividing the finite inequality by
+$\log W(k)=\log(N+1)$ and taking the lower limit gives
+\[
+ \liminf_{k\to\infty}\frac{f(k)}{\log W(k)}\ge\frac23.
+\]
+\end{proof}
+
+The new finite bound is not merely asymptotically stronger than the
+classical coloring bound.  It is strictly stronger for every relevant
+$N$.
+
+\begin{corollary}[Exact gain over the classical bound]\label{cor:exact-gain}
+Let $N=W(k)-1$.  Then the right-hand side of \cref{eq:main-exact} exceeds
+$H_N/2$ by
+\begin{equation}\label{eq:exact-gain}
+ \frac{NH_N-1}{2(3N-2)}.
+\end{equation}
+In particular, the improvement is strict for every $k\ge 3$.
+\end{corollary}
+
+\begin{proof}
+Write $a_N=(2N-1)/(3N-2)$.  Direct algebra gives
+\begin{align*}
+ \left[1+a_N\left(H_N-\frac32\right)\right]-\frac{H_N}{2}
+ &=1-\frac32a_N+\left(a_N-\frac12\right)H_N\\
+ &=\frac{NH_N-1}{2(3N-2)}.
+\end{align*}
+For $k\ge3$, one has $N\ge 2$, so $NH_N>1$.
+\end{proof}
+
+Since $H_N-3/2\ge H_N-2$, \cref{eq:main-exact} also immediately implies
+the originally claimed bound \cref{eq:advertised-bound}.
+
+\section{An \texorpdfstring{$r$}{r}-color extension}
+
+The same argument applies to any number of colors.
+
+\begin{theorem}[Van der Waerden extension]\label{thm:r-color}
+Let $r\ge2$ and $k\ge3$, and put
+\[
+ N=W(r,k)-1.
+\]
+Then
+\begin{equation}\label{eq:r-color}
+ f(k)\ge
+ 1+\frac{2N-1}{(2r-1)N-r}\,(H_N-H_r).
+\end{equation}
+Consequently, for every fixed $r\ge2$,
+\begin{equation}\label{eq:r-color-asymptotic}
+ \liminf_{k\to\infty}
+ \frac{f(k)}{\log W(r,k)}
+ \ge
+ \frac{2}{2r-1}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+There is an $r$-coloring of $[N]$ without a monochromatic $k$-AP.  Discard
+any empty color classes and let $q\le r$ be the number of nonempty classes.
+By \cref{thm:partition-universal},
+\[
+ f(k)\ge
+ 1+\frac{H_N-H_q}{q-N/(2N-1)}.
+\]
+Because $q\le r$, we have $H_N-H_q\ge H_N-H_r$, while
+$q-N/(2N-1)\le r-N/(2N-1)$.  Whenever $H_N-H_r\ge0$, replacing the
+numerator by the smaller quantity and the denominator by the larger one
+preserves a valid lower bound.  If $H_N-H_r<0$, the displayed target bound
+is weaker than the trivial inequality $f(k)\ge1$ and is automatic.  Thus
+\[
+ f(k)\ge
+ 1+\frac{H_N-H_r}{r-N/(2N-1)},
+\]
+which is equivalent to \cref{eq:r-color}.
+
+For fixed $r$, $W(r,k)\to\infty$ as $k\to\infty$.  Hence
+$H_N-H_r\sim\log N$ and
+\[
+ \frac{2N-1}{(2r-1)N-r}\longrightarrow\frac{2}{2r-1}.
+\]
+Dividing by $\log W(r,k)=\log(N+1)$ proves
+\cref{eq:r-color-asymptotic}.
+\end{proof}
+
+\section{Numerical illustrations}
+
+The exact two-color van der Waerden numbers currently known are
+\[
+ W(3)=9,\qquad W(4)=35,\qquad W(5)=178,\qquad W(6)=1132.
+\]
+These values are recorded in OEIS A005346 \cite{oeis-a005346}.  The following
+table compares three bounds obtained from them.  The second column of bounds is the classical coloring
+estimate $H_N/2$.  The third is the initially advertised estimate with
+$H_N-2$.  The fourth is the strengthened estimate of
+\cref{eq:main-exact}, with $N=W(k)-1$.
+
+\begin{table}[ht]
+\centering
+\caption{Illustrative finite lower bounds derived from exact values of $W(k)$.}
+\label{tab:numerics}
+\begin{tabular}{@{}c r r r r@{}}
+\toprule
+$k$ & $W(k)$ & $\tfrac12 H_N$ &
+$1+\frac{2N-1}{3N-2}(H_N-2)$ &
+$1+\frac{2N-1}{3N-2}(H_N-\tfrac32)$ \\
+\midrule
+3 & 9    & 1.358929 & 1.489448 & 1.830357 \\
+4 & 35   & 2.059105 & 2.419201 & 2.754201 \\
+5 & 178  & 2.878094 & 3.506492 & 3.840140 \\
+6 & 1132 & 3.804258 & 4.739561 & 5.072944 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These values are included only to illustrate the finite formula.  For small
+$k$, specialized constructions, including those of Gerver and later
+Kempner-set searches, give stronger numerical lower bounds.  The point of
+\cref{thm:main} is the uniform coefficient of $\log W(k)$.
+
+\subsection{A concrete three-term-progression-free example}
+
+The case $k=3$ gives a direct check of every part of the construction.  Since
+$W(3)=9$, the interval $[8]$ admits the progression-free two-coloring
+\[
+ C_0=\{1,2,5,6\},
+ \qquad
+ C_1=\{3,4,7,8\}.
+\]
+Both normalized color classes are equal to
+\[
+ S=\{0,1,4,5\}.
+\]
+The universal base is $b=2\cdot8-1=15$, and $15>2\max S=10$.
+Consequently
+\[
+ A=\Kemp(\{0,1,4,5\},15)+1
+   =\{1,2,5,6,16,17,20,21,61,62,65,66,\ldots\}
+\]
+is $3$-AP-free.  Retaining the exact normalized weight of either color class
+in \cref{thm:seed-amplification} gives
+\begin{align*}
+ \HH(A)
+ &\ge
+ 1+\frac{\frac12+\frac15+\frac16}{1-\frac4{15}}\\
+ &=1+\frac{13/15}{11/15}
+ =\frac{24}{11}
+ \approx 2.181818.
+\end{align*}
+This exceeds the universal value $1.830357$ in \cref{tab:numerics} because
+the universal theorem deliberately discards coloring-specific information in
+order to obtain a formula depending only on $W(k)$.
+
+\section{Discussion, limitations, and possible refinements}
+
+\subsection{What has and has not been proved}
+
+The argument is unconditional and constructs explicit infinite
+$k$-AP-free sets from any extremal van der Waerden coloring.  It proves a
+strict improvement of the coefficient $1/2$ in the lower bound involving
+$\log W(k)$.  It does not establish \cref{eq:erdos-question}; the ratio is
+shown only to have lower limit at least $2/3$.
+
+No assumption that $f(k)$ is finite is made.  If $f(k)=+\infty$ for some
+$k$, all stated lower bounds remain valid.  The constructed Kempner sets
+have convergent harmonic sums because their allowed-digit ratio satisfies
+$|S|/b<1$.
+
+\subsection{Why the constant \texorpdfstring{$2/3$}{2/3} appears}
+
+In a balanced two-coloring of an interval of length $N$, a typical color
+class has about $N/2$ elements.  The universally safe base in the argument
+is approximately $2N$, because the elementary modular-freeness lemma
+requires a base greater than twice the class diameter.  Thus the geometric
+ratio in the harmonic amplification is approximately
+\[
+ \frac{|C|}{b}\approx\frac14,
+\]
+so a color-class harmonic sum is multiplied by approximately
+\[
+ \frac{1}{1-1/4}=\frac43.
+\]
+The original coloring supplies approximately one half of the interval's
+harmonic mass.  Multiplying $1/2$ by $4/3$ gives $2/3$.
+
+This heuristic explains the constant produced by the universal argument,
+but it is not an optimality theorem.  Particular colorings may have smaller
+class diameters, more favorable normalized harmonic weights, or digit sets
+that are already progression-free modulo bases substantially smaller than
+twice their diameter.  \Cref{prop:partition-sensitive} retains exactly this
+information.
+
+\subsection{Possible routes beyond the universal bound}
+
+Any improvement beyond $2/3$ by this circle of ideas would need additional
+input not used in the universal estimate.  Potential directions include:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+ \item proving that some color class in every extremal two-coloring is
+ progression-free modulo a base smaller than $2\diam(C)+1$;
+ \item exploiting carries rather than excluding them through the condition
+ $b>2\diam(C)$;
+ \item combining information from both color classes inside a single
+ digit system instead of constructing two separate Kempner sets;
+ \item using the class-specific bases and normalized weights in
+ \cref{prop:partition-sensitive}, together with structural information on
+ extremal van der Waerden colorings.
+\end{enumerate}
+These are suggestions for further investigation, not claims that any of the
+approaches must succeed.
+
+\subsection{Relation to Gerver's bound}
+
+Combining \cref{eq:gerver} and \cref{thm:main} gives the unconditional
+summary
+\[
+ f(k)\ge
+ \max\left\{
+   (1-o(1))k\log k,
+   \left(\frac23-o(1)\right)\log W(k)
+ \right\}.
+\]
+The two terms measure different aspects of the problem.  Gerver's estimate
+is direct in $k$, whereas the present estimate is designed to answer the
+specific van der Waerden-number question posed by Erd\H{o}s and Graham.
+
+\appendix
+
+\section{Proof audit and edge cases}
+
+This appendix isolates the logical dependencies and common points at which
+a digit argument can fail.
+
+\subsection{Canonical expansions and leading zeroes}
+
+Every nonnegative integer has a unique canonical base-$b$ expansion, except
+that arbitrary leading zeroes may be appended.  In
+\cref{prop:leading-digit}, the leading digit $a$ is required to be nonzero,
+so each positive integer is counted exactly once.  The lower block $q$ is
+allowed to have leading zeroes, which gives exactly $s^{\ell-1}$ choices.
+
+\subsection{Why modular freeness is necessary}
+
+Ordinary $k$-AP-freeness of the digit set alone does not generally prevent
+an arithmetic progression whose residues wrap around modulo $b$.  The
+condition $b>2M$ in \cref{prop:large-base} prevents a mixture of wrapped and
+unwrapped steps.  This is precisely where the factor of approximately two
+in the chosen base enters.
+
+\subsection{Termination of the descent}
+
+The descent in \cref{thm:digit-descent} terminates because a positive
+integer $d$ is divisible by only finitely many powers of $b$.  Primality of
+$b$ is irrelevant.  The relevant exponent is simply the largest $t$ for
+which $b^t\mid d$.
+
+\subsection{Positivity of denominators}
+
+In \cref{thm:seed-amplification}, $C$ lies in an interval of length
+$\diam(C)+1$, so
+\[
+ |C|\le\diam(C)+1<b
+\]
+when $b>2\diam(C)$ and $\diam(C)\ge1$.  If $\diam(C)=0$, then $|C|=1$ and
+one may take any $b\ge2$.  Thus $1-|C|/b>0$ in all cases.
+
+\subsection{The weighted average with possibly negative numerators}
+
+For a very small class, $\Phi(C_i)-1$ can be zero, and cruder substitutes
+such as $\HH(C_i)-1$ can be negative.  \Cref{lem:weighted-max} remains valid
+without a positivity assumption on the numerators.  Only the denominators
+must be positive.
+
+\subsection{No circular use of van der Waerden's theorem}
+
+Van der Waerden's theorem is used only to know that $W(k)$ exists and that,
+by minimality, an avoiding coloring of $[W(k)-1]$ exists.  The construction
+of the infinite $k$-AP-free set is then verified directly by modular
+arithmetic and digit descent.
+
+\subsection{Algebraic check of the final coefficient}
+
+With $N=W(k)-1$ and $b=2N-1$, the sum of the two geometric denominators is
+\[
+ 2-\frac{N}{b}
+ =2-\frac{N}{2N-1}
+ =\frac{3N-2}{2N-1}.
+\]
+Taking the reciprocal gives
+\[
+ \frac{2N-1}{3N-2}
+ =\frac{2W(k)-3}{3W(k)-5},
+\]
+which tends to $2/3$.
+
+\section*{Declarations}
+
+\noindent\textbf{Author responsibility and AI-assisted preparation.}
+The manuscript was developed and typeset with substantial assistance from
+GPT-5.6 Pro, used in the drafting session under the ``Sol Pro'' reasoning
+configuration.  The system assisted with proof exploration, consistency
+checks, literature organization, and LaTeX drafting.  Tim Held is the sole
+human author, accepts responsibility for the contents, and is responsible
+for independently verifying every claim before formal submission or
+publication.  The AI system is not an author.
+
+\medskip
+\noindent\textbf{Funding.}
+No external funding was received for this work.
+
+\medskip
+\noindent\textbf{Competing interests.}
+The author declares no competing interests.
+
+\medskip
+\noindent\textbf{Data and code availability.}
+No external dataset, computer-assisted proof, or custom verification code is
+required for the argument.  The numerical values in \cref{tab:numerics} are
+direct evaluations of the displayed formulas using the exact van der Waerden
+numbers cited there.  The complete LaTeX source accompanies this preprint.
+
+\begin{thebibliography}{99}
+\small
+
+\bibitem{berlekamp-1968}
+E. R. Berlekamp,
+\newblock A construction for partitions which avoid long arithmetic progressions,
+\newblock \emph{Canadian Mathematical Bulletin} \textbf{11} (1968), no. 3,
+409--414, doi:10.4153/CMB-1968-047-7.
+
+\bibitem{erdos-problems-169}
+Erd\H{o}s Problems,
+\newblock Problem 169,
+\newblock \url{https://www.erdosproblems.com/169}, accessed August 28, 2026.
+
+\bibitem{erdos-graham-1979}
+P. Erd\H{o}s and R. L. Graham,
+\newblock Old and new problems and results in combinatorial number theory:
+van der Waerden's theorem and related topics,
+\newblock \emph{L'Enseignement Math\'ematique} (2) \textbf{25} (1979), no. 3--4,
+325--344.
+
+\bibitem{erdos-graham-1980}
+P. Erd\H{o}s and R. L. Graham,
+\newblock \emph{Old and New Problems and Results in Combinatorial Number Theory},
+\newblock Monographies de L'Enseignement Math\'ematique, no. 28,
+Universit\'e de Gen\`eve, 1980.
+
+\bibitem{erdos-turan-1936}
+P. Erd\H{o}s and P. Tur\'an,
+\newblock On some sequences of integers,
+\newblock \emph{Journal of the London Mathematical Society} \textbf{11} (1936),
+261--264.
+
+\bibitem{gerver-1977}
+J. L. Gerver,
+\newblock The sum of the reciprocals of a set of integers with no arithmetic
+progression of $k$ terms,
+\newblock \emph{Proceedings of the American Mathematical Society}
+\textbf{62} (1977), no. 2, 211--214.
+
+\bibitem{kempner-1914}
+A. J. Kempner,
+\newblock A curious convergent series,
+\newblock \emph{The American Mathematical Monthly} \textbf{21} (1914), no. 2,
+48--50.
+
+\bibitem{oeis-a005346}
+OEIS Foundation Inc.,
+\newblock The On-Line Encyclopedia of Integer Sequences, A005346:
+van der Waerden numbers $W(2,n)$,
+\newblock \url{https://oeis.org/A005346}, accessed August 28, 2026.
+
+\bibitem{vanderwaerden-1927}
+B. L. van der Waerden,
+\newblock Beweis einer Baudetschen Vermutung,
+\newblock \emph{Nieuw Archief voor Wiskunde} \textbf{15} (1927), 212--216.
+
+\bibitem{walker-2025}
+A. Walker,
+\newblock Integer sets of large harmonic sum which avoid long arithmetic
+progressions,
+\newblock arXiv:2203.06045v2 [math.NT], 2025,
+\newblock \url{https://arxiv.org/abs/2203.06045}.
+
+\bibitem{walker-walker-2020}
+Aled Walker and Alexander Walker,
+\newblock Arithmetic progressions with restricted digits,
+\newblock \emph{The American Mathematical Monthly} \textbf{127} (2020), no. 2,
+140--150, doi:10.1080/00029890.2020.1682888.
+
+\end{thebibliography}
+
+\end{document}

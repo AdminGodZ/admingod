@@ -1,10 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import {
-  ArrowUp,
-  ArrowUpRight,
-  Mail,
-} from "lucide-react";
+import { ArrowUp, ArrowUpRight, Mail } from "lucide-react";
 import {
   siLinux,
   siNextdotjs,
@@ -24,9 +20,11 @@ import { HeroTextReveal } from "@/components/portfolio/hero-text-reveal";
 import LivingStarfield from "@/components/portfolio/living-starfield.astro";
 import ScrollReveal from "@/components/portfolio/scroll-reveal.astro";
 import ScrollSidebar from "@/components/portfolio/scroll-sidebar";
-import VoidParticleTransition from "@/components/portfolio/void-particle-transition.astro";
 import VoidParticleField from "@/components/portfolio/void-particle-field";
+import VoidParticleTransition from "@/components/portfolio/void-particle-transition.astro";
+import ResearchCard from "@/components/research/research-card.astro";
 import Layout from "@/layouts/layout.astro";
+import { getResearch } from "@/lib/research";
 
 const projects = [
   {
@@ -71,6 +69,14 @@ const stack = [
   { name: "Railway", type: "Cloud platform", icon: siRailway },
   { name: "Linux", type: "Platform", icon: siLinux },
 ];
+
+const publishedResearch = await getResearch();
+const curatedResearch = publishedResearch.filter(
+  (entry) => entry.data.featured,
+);
+const featuredResearch = (
+  curatedResearch.length > 0 ? curatedResearch : publishedResearch
+).slice(0, 2);
 ---
 
 <Layout>
@@ -121,7 +127,6 @@ const stack = [
         <div class="relative z-10 mx-auto grid w-full max-w-7xl -translate-y-6 gap-10 lg:grid-cols-[minmax(0,0.56fr)_minmax(360px,0.44fr)] lg:items-center xl:-translate-y-8">
           <div class="max-w-[740px] pt-12 sm:pt-16 lg:pt-0">
             <HeroTextReveal
-              client:load
               eyebrow="Hi there, I call myself"
               title="AdminGod"
               description="and I love building software and hosting it myself."
@@ -289,6 +294,50 @@ const stack = [
         </div>
       </section>
 
+      {
+        featuredResearch.length > 0 && (
+          <section
+            id="research"
+            class="relative z-[1] px-5 py-24 sm:px-8 lg:px-12"
+          >
+            <div class="mx-auto max-w-7xl">
+              <div
+                data-scroll-reveal="heading"
+                class="mb-8"
+              >
+                <div class="flex flex-wrap items-center gap-5">
+                  <h2 class="shrink-0 text-lg font-semibold text-black/76 dark:text-white/76">
+                    Math research
+                  </h2>
+                  <div class="h-px min-w-10 flex-1 bg-black/10 dark:bg-white/12" />
+                  <a
+                    href="/research"
+                    class="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-black/68 transition-colors hover:text-black dark:text-white/68 dark:hover:text-white"
+                  >
+                    View all research
+                    <ArrowUpRight className="size-4" aria-hidden="true" />
+                  </a>
+                </div>
+                <p class="mt-4 max-w-2xl leading-7 text-black/58 dark:text-white/58">
+                  AI-assisted attempts with the paper, complete LaTeX source, and an honest verification status.
+                </p>
+              </div>
+
+              <div class="grid gap-5 lg:grid-cols-2">
+                {featuredResearch.map((entry, index) => (
+                  <div
+                    data-scroll-reveal="card"
+                    style={`--scroll-reveal-delay: ${index * 90}ms`}
+                  >
+                    <ResearchCard entry={entry} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )
+      }
+
       <CareerRoadmap />
 
       <section
@@ -368,6 +417,12 @@ const stack = [
                     class="text-sm font-semibold text-black/70 transition-colors hover:text-black dark:text-white/70 dark:hover:text-white"
                   >
                     Projects
+                  </a>
+                  <a
+                    href="/research"
+                    class="text-sm font-semibold text-black/70 transition-colors hover:text-black dark:text-white/70 dark:hover:text-white"
+                  >
+                    Research
                   </a>
                   <a
                     href="#roadmap"

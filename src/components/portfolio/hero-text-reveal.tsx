@@ -1,7 +1,4 @@
-"use client";
-
-import { motion, type Variants, useReducedMotion } from "framer-motion";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type HeroTextRevealProps = {
@@ -15,87 +12,28 @@ type HeroTextRevealProps = {
   children: ReactNode;
 };
 
-const eyebrowVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 10,
-    filter: "blur(8px)",
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
+type RevealStyle = CSSProperties & {
+  "--hero-reveal-delay": string;
+  "--hero-reveal-blur"?: string;
 };
 
-const titleContainerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      delayChildren: 0.18,
-      staggerChildren: 0.045,
-    },
-  },
-};
+const revealStyle = (delay: number, blur?: number): RevealStyle => ({
+  "--hero-reveal-delay": `${delay}ms`,
+  ...(blur === undefined ? {} : { "--hero-reveal-blur": `${blur}px` }),
+});
 
-const titleCharacterVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    filter: "blur(12px)",
-  },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+const withOccurrenceKeys = (values: string[]) => {
+  const occurrences = new Map<string, number>();
 
-const descriptionContainerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      delayChildren: 0.5,
-      staggerChildren: 0.055,
-    },
-  },
-};
+  return values.map((value) => {
+    const occurrence = occurrences.get(value) ?? 0;
+    occurrences.set(value, occurrence + 1);
 
-const descriptionWordVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    filter: "blur(9px)",
-  },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.45,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const actionsVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 14,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 1.4,
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
+    return {
+      key: `${value}-${occurrence}`,
+      value,
+    };
+  });
 };
 
 export function HeroTextReveal({
@@ -108,18 +46,14 @@ export function HeroTextReveal({
   actionsClassName,
   children,
 }: HeroTextRevealProps) {
-  const reduceMotion = useReducedMotion();
-  const titleCharacters = Array.from(title);
-  const descriptionWords = description.split(" ");
-  const initial = reduceMotion ? false : "hidden";
+  const titleCharacters = withOccurrenceKeys(Array.from(title));
+  const descriptionWords = withOccurrenceKeys(description.split(" "));
 
   return (
     <>
       {eyebrow ? (
-        <motion.div
-          initial={initial}
-          animate="visible"
-          variants={eyebrowVariants}
+        <div
+          style={revealStyle(0)}
           className={cn(
             "hero-reveal-eyebrow mb-5 inline-flex items-center gap-2.5 text-base font-semibold tracking-[0.04em] text-black/58 dark:text-white/58 sm:text-lg",
             eyebrowClassName,
@@ -137,56 +71,44 @@ export function HeroTextReveal({
           >
             👋
           </span>
-        </motion.div>
+        </div>
       ) : null}
 
-      <motion.h1
-        initial={initial}
-        animate="visible"
-        variants={titleContainerVariants}
-        className={cn("whitespace-nowrap", titleClassName)}
-      >
+      <h1 className={cn("whitespace-nowrap", titleClassName)}>
         <span className="sr-only">{title}</span>
-        {titleCharacters.map((character, index) => (
-          <motion.span
-            key={`${character}-${index}`}
+        {titleCharacters.map(({ key, value: character }, index) => (
+          <span
+            key={key}
             aria-hidden="true"
-            variants={titleCharacterVariants}
             className="hero-reveal-segment inline-block"
+            style={revealStyle(180 + index * 45, 12)}
           >
             {character}
-          </motion.span>
+          </span>
         ))}
-      </motion.h1>
+      </h1>
 
-      <motion.p
-        initial={initial}
-        animate="visible"
-        variants={descriptionContainerVariants}
-        className={descriptionClassName}
-      >
+      <p className={descriptionClassName}>
         <span className="sr-only">{description}</span>
-        {descriptionWords.map((word, index) => (
-          <motion.span
-            key={`${word}-${index}`}
+        {descriptionWords.map(({ key, value: word }, index) => (
+          <span
+            key={key}
             aria-hidden="true"
-            variants={descriptionWordVariants}
             className="hero-reveal-segment inline-block whitespace-pre"
+            style={revealStyle(500 + index * 55, 9)}
           >
             {word}
             {index < descriptionWords.length - 1 ? " " : null}
-          </motion.span>
+          </span>
         ))}
-      </motion.p>
+      </p>
 
-      <motion.div
-        initial={initial}
-        animate="visible"
-        variants={actionsVariants}
+      <div
+        style={revealStyle(1400)}
         className={cn("hero-reveal-actions", actionsClassName)}
       >
         {children}
-      </motion.div>
+      </div>
     </>
   );
 }

@@ -134,9 +134,11 @@ body {
   .hero-reveal-eyebrow,
   .hero-reveal-segment,
   .hero-reveal-actions {
+    animation: none !important;
     opacity: 1 !important;
     filter: none !important;
     transform: none !important;
+    translate: 0 0 !important;
   }
 
   .hero-wave {
@@ -176,6 +178,43 @@ body {
   94% {
     transform: rotate(0deg);
   }
+}
+
+@keyframes hero-reveal-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(var(--hero-reveal-blur, 10px));
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-reveal-rise-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+    filter: blur(var(--hero-reveal-blur, 8px));
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+}
+
+.hero-reveal-eyebrow,
+.hero-reveal-actions {
+  animation: hero-reveal-rise-in 500ms cubic-bezier(0.22, 1, 0.36, 1)
+    var(--hero-reveal-delay, 0ms) both;
+}
+
+.hero-reveal-segment {
+  animation: hero-reveal-blur-in 500ms cubic-bezier(0.22, 1, 0.36, 1)
+    var(--hero-reveal-delay, 0ms) both;
 }
 
 @keyframes scroll-reveal-in {
@@ -388,8 +427,7 @@ body {
       "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo,
       monospace;
     font-size: 10px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
+    letter-spacing: 0.08em;
     white-space: nowrap;
     animation-name: stream-slide;
     animation-timing-function: linear;
