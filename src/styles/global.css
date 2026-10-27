@@ -131,6 +131,8 @@ body {
     scroll-behavior: auto;
   }
 
+  /* biome-ignore-start lint/complexity/noImportantStyles: reduced motion must override running animations and reveal states */
+
   .hero-reveal-eyebrow,
   .hero-reveal-segment,
   .hero-reveal-actions {
@@ -152,6 +154,7 @@ body {
     filter: none !important;
     animation: none !important;
   }
+  /* biome-ignore-end lint/complexity/noImportantStyles: reduced motion overrides */
 }
 
 @keyframes hero-wave {
@@ -359,10 +362,7 @@ body {
       540px 460px,
       100% 100%,
       100% 100%;
-    background-repeat:
-      repeat,
-      no-repeat,
-      no-repeat;
+    background-repeat: repeat, no-repeat, no-repeat;
   }
 
   .portfolio-page::before {
@@ -484,12 +484,7 @@ body {
       #000 12%,
       #000 100%
     );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      #000 12%,
-      #000 100%
-    );
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 100%);
   }
 
   .void-portal-actions {
@@ -555,20 +550,6 @@ body {
     transform: translate(3px, -3px);
   }
 
-  .dark .portfolio-page {
-    background-color: #000;
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='540' height='460' viewBox='0 0 540 460'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='24' cy='38' r='.7' opacity='.12'/%3E%3Ccircle cx='67' cy='128' r='1.15' opacity='.16'/%3E%3Ccircle cx='112' cy='62' r='.55' opacity='.09'/%3E%3Ccircle cx='151' cy='202' r='.8' opacity='.13'/%3E%3Ccircle cx='198' cy='116' r='1.45' opacity='.17'/%3E%3Ccircle cx='239' cy='31' r='.65' opacity='.1'/%3E%3Ccircle cx='274' cy='177' r='.55' opacity='.11'/%3E%3Ccircle cx='318' cy='82' r='.95' opacity='.15'/%3E%3Ccircle cx='361' cy='228' r='.7' opacity='.1'/%3E%3Ccircle cx='406' cy='142' r='1.2' opacity='.14'/%3E%3Ccircle cx='452' cy='48' r='.55' opacity='.1'/%3E%3Ccircle cx='507' cy='194' r='.85' opacity='.14'/%3E%3Ccircle cx='42' cy='278' r='1.35' opacity='.17'/%3E%3Ccircle cx='91' cy='399' r='.6' opacity='.1'/%3E%3Ccircle cx='136' cy='326' r='.8' opacity='.14'/%3E%3Ccircle cx='181' cy='442' r='1.05' opacity='.13'/%3E%3Ccircle cx='226' cy='291' r='.5' opacity='.1'/%3E%3Ccircle cx='264' cy='377' r='1.25' opacity='.16'/%3E%3Ccircle cx='309' cy='322' r='.65' opacity='.12'/%3E%3Ccircle cx='351' cy='427' r='.9' opacity='.14'/%3E%3Ccircle cx='397' cy='286' r='.55' opacity='.09'/%3E%3Ccircle cx='438' cy='382' r='1.4' opacity='.17'/%3E%3Ccircle cx='482' cy='311' r='.7' opacity='.11'/%3E%3Ccircle cx='526' cy='435' r='1' opacity='.14'/%3E%3C/g%3E%3Cg fill='%2360a5fa'%3E%3Ccircle cx='87' cy='28' r='1' opacity='.2'/%3E%3Ccircle cx='169' cy='151' r='.75' opacity='.18'/%3E%3Ccircle cx='257' cy='235' r='1.3' opacity='.24'/%3E%3Ccircle cx='342' cy='17' r='.65' opacity='.17'/%3E%3Ccircle cx='419' cy='217' r='.9' opacity='.2'/%3E%3Ccircle cx='497' cy='91' r='1.2' opacity='.22'/%3E%3Ccircle cx='18' cy='421' r='.75' opacity='.18'/%3E%3Ccircle cx='116' cy='362' r='1.15' opacity='.21'/%3E%3Ccircle cx='334' cy='359' r='.8' opacity='.18'/%3E%3Ccircle cx='474' cy='448' r='.65' opacity='.17'/%3E%3C/g%3E%3C/svg%3E"),
-      radial-gradient(circle at 0% 18%, rgb(31 41 55 / 24%), transparent 34%),
-      radial-gradient(circle at 100% 66%, rgb(30 58 138 / 18%), transparent 38%),
-      linear-gradient(#000, #000);
-  }
-
-  .dark .portfolio-page::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='330' height='290' viewBox='0 0 330 290'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='14' cy='28' r='1.15' opacity='.48'/%3E%3Ccircle cx='43' cy='104' r='.8' opacity='.34'/%3E%3Ccircle cx='76' cy='55' r='1.45' opacity='.5'/%3E%3Ccircle cx='109' cy='159' r='.9' opacity='.4'/%3E%3Ccircle cx='141' cy='22' r='.7' opacity='.32'/%3E%3Ccircle cx='174' cy='126' r='1.25' opacity='.52'/%3E%3Ccircle cx='206' cy='73' r='.85' opacity='.38'/%3E%3Ccircle cx='239' cy='184' r='1.5' opacity='.5'/%3E%3Ccircle cx='272' cy='43' r='.7' opacity='.34'/%3E%3Ccircle cx='311' cy='136' r='1.2' opacity='.47'/%3E%3Ccircle cx='30' cy='229' r='1.4' opacity='.5'/%3E%3Ccircle cx='68' cy='270' r='.75' opacity='.34'/%3E%3Ccircle cx='119' cy='211' r='1' opacity='.44'/%3E%3Ccircle cx='163' cy='258' r='1.3' opacity='.5'/%3E%3Ccircle cx='222' cy='241' r='.8' opacity='.36'/%3E%3Ccircle cx='288' cy='273' r='1.1' opacity='.46'/%3E%3C/g%3E%3Cg fill='%2360a5fa'%3E%3Ccircle cx='93' cy='16' r='1.15' opacity='.62'/%3E%3Ccircle cx='191' cy='37' r='.9' opacity='.52'/%3E%3Ccircle cx='301' cy='83' r='1.3' opacity='.64'/%3E%3Ccircle cx='12' cy='178' r='.85' opacity='.48'/%3E%3Ccircle cx='155' cy='193' r='1.2' opacity='.6'/%3E%3Ccircle cx='258' cy='221' r='.9' opacity='.52'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 330px 290px;
-  }
-
   /* LivingStarfield owns the persistent stars so those same points can twinkle. */
   .portfolio-page {
     background-image:
@@ -580,15 +561,11 @@ body {
         rgba(219, 234, 254, 0.3) 100%
       ),
       linear-gradient(180deg, #f8fafc 0%, #ffffff 38%, #f8fafc 100%);
-    background-position:
-      center,
-      center;
+    background-position: center, center;
     background-size:
       100% 100%,
       100% 100%;
-    background-repeat:
-      no-repeat,
-      no-repeat;
+    background-repeat: no-repeat, no-repeat;
   }
 
   .portfolio-page::before {
@@ -596,6 +573,7 @@ body {
   }
 
   .dark .portfolio-page {
+    background-color: #000;
     background-image:
       radial-gradient(circle at 0% 18%, rgb(31 41 55 / 24%), transparent 34%),
       radial-gradient(circle at 100% 66%, rgb(30 58 138 / 18%), transparent 38%),

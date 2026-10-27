@@ -111,8 +111,7 @@ export default function ScrollSidebar() {
 
   const restoreDragStyles = useCallback(() => {
     document.body.style.userSelect = previousUserSelectRef.current;
-    document.body.style.webkitUserSelect =
-      previousWebkitUserSelectRef.current;
+    document.body.style.webkitUserSelect = previousWebkitUserSelectRef.current;
     document.documentElement.style.scrollBehavior =
       previousScrollBehaviorRef.current;
   }, []);
@@ -178,12 +177,7 @@ export default function ScrollSidebar() {
         window.cancelAnimationFrame(dragFrameRef.current);
       }
     };
-  }, [
-    applyThumbMetrics,
-    clearHideTimer,
-    restoreDragStyles,
-    scheduleHide,
-  ]);
+  }, [applyThumbMetrics, clearHideTimer, restoreDragStyles, scheduleHide]);
 
   const applyDragPosition = useCallback(() => {
     dragFrameRef.current = 0;
@@ -224,8 +218,7 @@ export default function ScrollSidebar() {
     latestPointerYRef.current = event.clientY;
     dragStartThumbYRef.current = metrics.thumbTranslateY;
     previousUserSelectRef.current = document.body.style.userSelect;
-    previousWebkitUserSelectRef.current =
-      document.body.style.webkitUserSelect;
+    previousWebkitUserSelectRef.current = document.body.style.webkitUserSelect;
     previousScrollBehaviorRef.current =
       document.documentElement.style.scrollBehavior;
     document.body.style.userSelect = "none";

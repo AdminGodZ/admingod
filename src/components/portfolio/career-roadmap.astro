@@ -818,6 +818,7 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     will-change: transform, opacity, filter;
   }
 
+  /* biome-ignore-start lint/complexity/noImportantStyles: layout is measured without in-flight reveal transforms */
   .roadmap-measuring .roadmap-node,
   .roadmap-measuring .roadmap-junction,
   .roadmap-measuring .roadmap-card,
@@ -829,6 +830,7 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     filter: none !important;
     transform: none !important;
   }
+  /* biome-ignore-end lint/complexity/noImportantStyles: measuring overrides */
 
   :global(html.dark) .roadmap-route-track {
     stroke: rgba(255, 255, 255, 0.1);
@@ -930,6 +932,8 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
       display: none;
     }
 
+    /* biome-ignore-start lint/complexity/noImportantStyles: reduced motion must override reveal states */
+
     .roadmap-card,
     .roadmap-future-card,
     .roadmap-special-unit,
@@ -946,6 +950,7 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
       opacity: 1 !important;
       transform: none !important;
     }
+    /* biome-ignore-end lint/complexity/noImportantStyles: reduced motion overrides */
   }
 </style>
 

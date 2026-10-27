@@ -64,7 +64,7 @@ const contactEmail = "tim.held@pm.me";
           >
             <div class="field-row">
               <label>
-                <span>Name</span>
+                <span class="field-label">Name</span>
                 <input
                   id="contact-name"
                   type="text"
@@ -79,7 +79,7 @@ const contactEmail = "tim.held@pm.me";
               </label>
 
               <label>
-                <span>Email</span>
+                <span class="field-label">Email</span>
                 <input
                   id="contact-email"
                   type="email"
@@ -95,7 +95,7 @@ const contactEmail = "tim.held@pm.me";
             </div>
 
             <label>
-              <span>Subject</span>
+              <span class="field-label">Subject</span>
               <input
                 id="contact-subject"
                 type="text"
@@ -109,7 +109,7 @@ const contactEmail = "tim.held@pm.me";
             </label>
 
             <label>
-              <span>Message</span>
+              <span class="field-label">Message</span>
               <textarea
                 id="contact-message"
                 name="message"
@@ -464,7 +464,7 @@ const contactEmail = "tim.held@pm.me";
     gap: 8px;
   }
 
-  label > span {
+  .field-label {
     color: rgba(16, 16, 16, 0.72);
     font-size: 0.78rem;
     font-weight: 700;
@@ -622,7 +622,7 @@ const contactEmail = "tim.held@pm.me";
     color: rgba(245, 245, 245, 0.5);
   }
 
-  :global(html.dark) label > span {
+  :global(html.dark) .field-label {
     color: rgba(245, 245, 245, 0.72);
   }
 
