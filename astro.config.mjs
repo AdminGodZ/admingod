@@ -8,11 +8,7 @@ export default defineConfig({
   devToolbar: {
     enabled: false,
   },
-  integrations: [
-    react({
-      experimentalReactChildren: true,
-    }),
-  ],
+  integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
   },
