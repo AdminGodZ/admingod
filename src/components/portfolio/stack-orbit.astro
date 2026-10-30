@@ -1,0 +1,379 @@
+---
+// Tool icons orbiting the AdminGod logo on two tilted rings. Positions are
+// driven by a small requestAnimationFrame loop so items can scale, dim and
+// pass behind the logo as they travel around the back of a ring.
+import { Image } from "astro:assets";
+import adminGodLogo from "@/assets/admingod_dark_transparent.png";
+
+interface Props {
+  items: {
+    name: string;
+    type: string;
+    icon: { path: string };
+  }[];
+  innerCount?: number;
+  class?: string;
+}
+
+const { items, innerCount = 3, class: className } = Astro.props;
+const outerCount = items.length - innerCount;
+
+const orbitItems = items.map((item, index) => {
+  const inner = index < innerCount;
+  const slot = inner ? index : index - innerCount;
+  const count = inner ? innerCount : outerCount;
+
+  return {
+    ...item,
+    ring: inner ? "inner" : "outer",
+    phase: (slot / count) * 360 + (inner ? 30 : 0),
+  };
+});
+---
+
+<div
+  data-stack-orbit
+  class:list={["stack-orbit", className]}
+>
+  <div class="stack-orbit__ring stack-orbit__ring--outer" aria-hidden="true">
+  </div>
+  <div class="stack-orbit__ring stack-orbit__ring--inner" aria-hidden="true">
+  </div>
+
+  <div class="stack-orbit__core" aria-hidden="true">
+    <Image
+      src={adminGodLogo}
+      alt=""
+      width={420}
+      widths={[280, 420, 560, 840]}
+      sizes="(min-width: 1280px) 300px, 24vw"
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+      class="stack-orbit__logo dark:hidden"
+    />
+    <img
+      src="/admingod_white_transparent.png"
+      alt=""
+      width="1254"
+      height="1254"
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+      class="stack-orbit__logo hidden dark:block"
+    />
+  </div>
+
+  <ul class="stack-orbit__items">
+    {
+      orbitItems.map((item) => (
+        <li
+          data-orbit-item
+          data-ring={item.ring}
+          data-phase={item.phase.toFixed(2)}
+          class="stack-orbit__item"
+        >
+          <span class="stack-orbit__tile">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={item.icon.path} />
+            </svg>
+          </span>
+          <span class="stack-orbit__label">
+            <span class="stack-orbit__name">{item.name}</span>
+            <span class="stack-orbit__type">{item.type}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .stack-orbit {
+    --tilt: 0.36;
+    --inner-rx: 0px;
+    --outer-rx: 0px;
+    --tile-bg: #fff;
+    --tile-fg: rgb(0 0 0 / 80%);
+    --tile-border: rgb(0 0 0 / 8%);
+    --tile-border-hover: rgb(0 0 0 / 22%);
+    --tile-shadow: rgb(0 0 0 / 9%);
+    --tile-shadow-hover: rgb(0 0 0 / 14%);
+    position: relative;
+    width: 100%;
+    max-width: 1040px;
+    aspect-ratio: 2.05;
+    margin-inline: auto;
+  }
+
+  :global(html.dark) .stack-orbit {
+    --tile-bg: #0a0a0a;
+    --tile-fg: rgb(255 255 255 / 84%);
+    --tile-border: rgb(255 255 255 / 11%);
+    --tile-border-hover: rgb(255 255 255 / 26%);
+    --tile-shadow: rgb(0 0 0 / 60%);
+    --tile-shadow-hover: rgb(0 0 0 / 72%);
+  }
+
+  .stack-orbit__ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px dashed rgb(0 0 0 / 12%);
+    border-radius: 50%;
+    pointer-events: none;
+    translate: -50% -50%;
+  }
+
+  .stack-orbit__ring--inner {
+    width: calc(var(--inner-rx) * 2);
+    height: calc(var(--inner-rx) * 2 * var(--tilt));
+  }
+
+  .stack-orbit__ring--outer {
+    width: calc(var(--outer-rx) * 2);
+    height: calc(var(--outer-rx) * 2 * var(--tilt));
+  }
+
+  :global(html.dark) .stack-orbit__ring {
+    border-color: rgb(255 255 255 / 13%);
+  }
+
+  .stack-orbit__core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 50;
+    width: 29%;
+    translate: -50% -56%;
+    pointer-events: none;
+  }
+
+  .stack-orbit__core::before {
+    position: absolute;
+    inset: -18%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgb(0 0 0 / 7%) 0%,
+      rgb(0 0 0 / 0%) 68%
+    );
+    content: "";
+  }
+
+  :global(html.dark) .stack-orbit__core::before {
+    background: radial-gradient(
+      circle,
+      rgb(255 255 255 / 9%) 0%,
+      rgb(255 255 255 / 0%) 68%
+    );
+  }
+
+  .stack-orbit__logo {
+    width: 100%;
+    height: auto;
+    user-select: none;
+    filter: drop-shadow(0 24px 34px rgb(0 0 0 / 18%));
+  }
+
+  .stack-orbit__items {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stack-orbit__item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  .stack-orbit__tile {
+    display: flex;
+    width: 4.25rem;
+    height: 4.25rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--tile-border);
+    border-radius: 0.9rem;
+    background: var(--tile-bg);
+    color: var(--tile-fg);
+    box-shadow: 0 18px 38px var(--tile-shadow);
+    transition:
+      border-color 200ms,
+      box-shadow 200ms,
+      scale 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .stack-orbit__tile svg {
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor;
+  }
+
+  .stack-orbit__item:hover .stack-orbit__tile {
+    border-color: var(--tile-border-hover);
+    box-shadow: 0 22px 44px var(--tile-shadow-hover);
+    scale: 1.12;
+  }
+
+  .stack-orbit__label {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 200ms,
+      translate 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    translate: 0 -4px;
+  }
+
+  .stack-orbit__item:hover .stack-orbit__label {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .stack-orbit__name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .stack-orbit__type {
+    font-size: 0.78rem;
+    color: rgb(0 0 0 / 58%);
+  }
+
+  :global(html.dark) .stack-orbit__name {
+    color: #fff;
+  }
+
+  :global(html.dark) .stack-orbit__type {
+    color: rgb(255 255 255 / 58%);
+  }
+</style>
+
+<script>
+  // Seconds per revolution; the outer ring drifts slower than the inner one.
+  const periods = { inner: 34, outer: 58 } as const;
+  const entranceMs = 1400;
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  for (const orbit of document.querySelectorAll<HTMLElement>(
+    "[data-stack-orbit]",
+  )) {
+    const items = Array.from(
+      orbit.querySelectorAll<HTMLElement>("[data-orbit-item]"),
+    ).map((element) => ({
+      element,
+      ring: element.dataset.ring === "inner" ? "inner" : "outer",
+      phase: (Number(element.dataset.phase) * Math.PI) / 180,
+    })) as {
+      element: HTMLElement;
+      ring: keyof typeof periods;
+      phase: number;
+    }[];
+
+    let radii = { inner: 0, outer: 0 };
+    let tilt = 0.36;
+    let elapsed = 0;
+    let lastFrame = 0;
+    let entranceStart = 0;
+    let hovered: HTMLElement | null = null;
+    let visible = false;
+    let frame = 0;
+
+    const measure = () => {
+      const width = orbit.clientWidth;
+      tilt = Number.parseFloat(getComputedStyle(orbit).getPropertyValue("--tilt")) || 0.36;
+      radii = { inner: width * 0.27, outer: width * 0.45 };
+      orbit.style.setProperty("--inner-rx", `${radii.inner}px`);
+      orbit.style.setProperty("--outer-rx", `${radii.outer}px`);
+    };
+
+    const place = (now: number) => {
+      // Items wait inside the logo until the orbit first scrolls into view.
+      const entrance = reducedMotion
+        ? 1
+        : entranceStart
+          ? Math.min(1, (now - entranceStart) / entranceMs)
+          : 0;
+      // easeOutCubic so items fly out of the logo and settle on their ring.
+      const spread = 1 - (1 - entrance) ** 3;
+
+      for (const item of items) {
+        const angle =
+          item.phase + (elapsed / periods[item.ring]) * Math.PI * 2;
+        const radius = radii[item.ring] * spread;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius * tilt;
+        // depth: -1 at the back of the ring, 1 at the front.
+        const depth = Math.sin(angle);
+        const scale = (0.74 + (depth + 1) * 0.13) * (0.4 + spread * 0.6);
+        const opacity = (0.42 + (depth + 1) * 0.29) * spread;
+
+        item.element.style.transform = `translate(-50%, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+        item.element.style.opacity = opacity.toFixed(3);
+        // The logo sits at z-index 50, so items behind it pass underneath.
+        item.element.style.zIndex =
+          item.element === hovered
+            ? "100"
+            : String(Math.round(50 + depth * 40));
+      }
+    };
+
+    const tick = (now: number) => {
+      if (!hovered) elapsed += Math.min(now - lastFrame, 64) / 1000;
+      lastFrame = now;
+      place(now);
+      frame = visible ? requestAnimationFrame(tick) : 0;
+    };
+
+    const start = () => {
+      if (frame || reducedMotion) return;
+      lastFrame = performance.now();
+      if (!entranceStart) entranceStart = lastFrame;
+      frame = requestAnimationFrame(tick);
+    };
+
+    measure();
+    place(performance.now());
+    new ResizeObserver(() => {
+      measure();
+      place(performance.now());
+    }).observe(orbit);
+
+    for (const item of items) {
+      item.element.addEventListener("pointerenter", () => {
+        hovered = item.element;
+        place(performance.now());
+      });
+      item.element.addEventListener("pointerleave", () => {
+        hovered = null;
+      });
+    }
+
+    new IntersectionObserver(
+      ([entry]) => {
+        visible = entry?.isIntersecting ?? false;
+        if (visible) start();
+      },
+      { threshold: 0.2 },
+    ).observe(orbit);
+  }
+</script>

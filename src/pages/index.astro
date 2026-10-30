@@ -21,6 +21,7 @@ import LivingStarfield from "@/components/portfolio/living-starfield.astro";
 import ScrollReveal from "@/components/portfolio/scroll-reveal.astro";
 import ScrollSidebar from "@/components/portfolio/scroll-sidebar";
 import ServiceStatus from "@/components/portfolio/service-status.astro";
+import StackOrbit from "@/components/portfolio/stack-orbit.astro";
 import VoidParticleField from "@/components/portfolio/void-particle-field";
 import Layout from "@/layouts/layout.astro";
 
@@ -307,7 +308,11 @@ const stack = [
             <div class="h-px flex-1 bg-black/10 dark:bg-white/12" />
           </div>
 
-          <ul class="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div data-scroll-reveal="heading" class="hidden md:block">
+            <StackOrbit items={stack} />
+          </div>
+
+          <ul class="grid grid-cols-2 gap-4 md:hidden">
             {stack.map((item, index) => (
               <li
                 data-scroll-reveal="card"
