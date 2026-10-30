@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef } from "react";
 
 type VoidParticleFieldProps = {
@@ -58,26 +56,55 @@ export default function VoidParticleField({
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    let width = 1;
-    let height = 1;
-    let dpr = 1;
+    let width = 0;
+    let height = 0;
+    let dpr = 0;
     let particles: Particle[] = [];
+    let background: CanvasGradient | null = null;
     let raf = 0;
     let last = performance.now();
     let dark = document.documentElement.classList.contains("dark");
+
+    const createBackground = () => {
+      const gradient = ctx.createLinearGradient(0, height, 0, 0);
+      gradient.addColorStop(
+        0,
+        dark ? "rgba(255, 255, 255, 0.055)" : "rgba(10, 10, 10, 0.085)",
+      );
+      gradient.addColorStop(
+        0.22,
+        dark ? "rgba(245, 245, 245, 0.026)" : "rgba(14, 14, 14, 0.04)",
+      );
+      gradient.addColorStop(
+        0.56,
+        dark ? "rgba(235, 235, 235, 0.008)" : "rgba(16, 16, 16, 0.012)",
+      );
+      gradient.addColorStop(1, "rgba(16, 16, 16, 0)");
+      return gradient;
+    };
 
     const resize = () => {
       canvas.style.removeProperty("width");
       canvas.style.removeProperty("height");
 
       const rect = canvas.getBoundingClientRect();
-      width = Math.max(1, Math.floor(rect.width));
-      height = Math.max(1, Math.floor(rect.height));
-      dpr = Math.min(window.devicePixelRatio || 1, 1.8);
+      const nextWidth = Math.max(1, Math.floor(rect.width));
+      const nextHeight = Math.max(1, Math.floor(rect.height));
+      const nextDpr = Math.min(window.devicePixelRatio || 1, 1.8);
 
+      // Mobile browsers fire resize while the URL bar slides in and out;
+      // keep the running field unless the canvas really changed size.
+      if (nextWidth === width && nextHeight === height && nextDpr === dpr) {
+        return;
+      }
+
+      width = nextWidth;
+      height = nextHeight;
+      dpr = nextDpr;
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      background = createBackground();
 
       const count = clamp(Math.floor(width / 4.8), 220, 560);
       particles = Array.from({ length: count }, () => {
@@ -96,22 +123,10 @@ export default function VoidParticleField({
 
       ctx.clearRect(0, 0, width, height);
 
-      const gradient = ctx.createLinearGradient(0, height, 0, 0);
-      gradient.addColorStop(
-        0,
-        dark ? "rgba(255, 255, 255, 0.055)" : "rgba(10, 10, 10, 0.085)",
-      );
-      gradient.addColorStop(
-        0.22,
-        dark ? "rgba(245, 245, 245, 0.026)" : "rgba(14, 14, 14, 0.04)",
-      );
-      gradient.addColorStop(
-        0.56,
-        dark ? "rgba(235, 235, 235, 0.008)" : "rgba(16, 16, 16, 0.012)",
-      );
-      gradient.addColorStop(1, "rgba(16, 16, 16, 0)");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
+      if (background) {
+        ctx.fillStyle = background;
+        ctx.fillRect(0, 0, width, height);
+      }
 
       for (let i = 0; i < particles.length; i += 1) {
         const particle = particles[i];
@@ -140,26 +155,46 @@ export default function VoidParticleField({
       }
 
       ctx.shadowBlur = 0;
+    };
 
-      if (!prefersReducedMotion) {
-        raf = window.requestAnimationFrame(draw);
-      }
+    // With reduced motion the field is drawn once, and redrawn only when the
+    // size or theme changes, without advancing the particles.
+    const drawStill = () => draw(last);
+
+    const frame = (now: number) => {
+      draw(now);
+      raf = window.requestAnimationFrame(frame);
+    };
+
+    const start = () => {
+      if (raf || prefersReducedMotion) return;
+      last = performance.now();
+      raf = window.requestAnimationFrame(frame);
+    };
+
+    const stop = () => {
+      window.cancelAnimationFrame(raf);
+      raf = 0;
     };
 
     const onResize = () => {
       resize();
       if (prefersReducedMotion) {
-        draw(0);
+        drawStill();
       }
     };
 
     resize();
     window.addEventListener("resize", onResize, { passive: true });
     const themeObserver = new MutationObserver(() => {
-      dark = document.documentElement.classList.contains("dark");
+      const nextDark = document.documentElement.classList.contains("dark");
+      if (nextDark === dark) return;
+
+      dark = nextDark;
+      background = createBackground();
 
       if (prefersReducedMotion) {
-        draw(performance.now());
+        drawStill();
       }
     });
     themeObserver.observe(document.documentElement, {
@@ -167,16 +202,26 @@ export default function VoidParticleField({
       attributeFilter: ["class"],
     });
 
+    // The hero scrolls away for most of the page; only animate while the
+    // canvas is on screen.
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        start();
+      } else {
+        stop();
+      }
+    });
+    visibilityObserver.observe(canvas);
+
     if (prefersReducedMotion) {
-      draw(0);
-    } else {
-      raf = window.requestAnimationFrame(draw);
+      drawStill();
     }
 
     return () => {
-      window.cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("resize", onResize);
       themeObserver.disconnect();
+      visibilityObserver.disconnect();
     };
   }, []);
 
