@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { ArrowUp, ArrowUpRight, Mail } from "lucide-react";
 import {
+  siApple,
   siLinux,
   siNextdotjs,
   siNodedotjs,
@@ -69,6 +70,7 @@ const stack = [
   { name: "Rust", type: "Language", icon: siRust },
   { name: "Railway", type: "Cloud platform", icon: siRailway },
   { name: "Linux", type: "Platform", icon: siLinux },
+  { name: "macOS", type: "Platform", icon: siApple },
 ];
 ---
 
@@ -317,7 +319,7 @@ const stack = [
               <li
                 data-scroll-reveal="card"
                 style={`--scroll-reveal-delay: ${(index % 4) * 70}ms`}
-                class="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-lg border border-black/8 bg-white p-5 shadow-[0_18px_38px_rgba(0,0,0,0.06)] ring-1 ring-white/80 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black/16 hover:shadow-[0_24px_46px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 dark:hover:border-white/20 dark:hover:shadow-[0_24px_46px_rgba(0,0,0,0.72)]"
+                class="group relative flex min-h-[170px] flex-col odd:last:col-span-2 justify-between overflow-hidden rounded-lg border border-black/8 bg-white p-5 shadow-[0_18px_38px_rgba(0,0,0,0.06)] ring-1 ring-white/80 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black/16 hover:shadow-[0_24px_46px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 dark:hover:border-white/20 dark:hover:shadow-[0_24px_46px_rgba(0,0,0,0.72)]"
               >
                 <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0)_36%,rgba(0,0,0,0.035)_100%)] dark:bg-[linear-gradient(145deg,rgba(255,255,255,0.025)_0%,rgba(255,255,255,0)_55%)]" />
                 <svg
