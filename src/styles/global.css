@@ -114,6 +114,20 @@ html.dark .theme-toggle-sun {
   display: block;
 }
 
+/* Theme switch: the new snapshot is revealed by a clip-path circle animated
+   from the toggle, so the default cross-fade is disabled. */
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* biome-ignore-start lint/complexity/noImportantStyles: color transitions would leak into the live snapshot mid-reveal */
+html.theme-transition * {
+  transition: none !important;
+}
+/* biome-ignore-end lint/complexity/noImportantStyles: theme reveal override */
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 0;
