@@ -20,6 +20,7 @@ import { HeroTextReveal } from "@/components/portfolio/hero-text-reveal";
 import LivingStarfield from "@/components/portfolio/living-starfield.astro";
 import ScrollReveal from "@/components/portfolio/scroll-reveal.astro";
 import ScrollSidebar from "@/components/portfolio/scroll-sidebar";
+import ServiceStatus from "@/components/portfolio/service-status.astro";
 import VoidParticleField from "@/components/portfolio/void-particle-field";
 import Layout from "@/layouts/layout.astro";
 
@@ -33,6 +34,7 @@ const projects = [
     image: adminSearchImage,
     imageWidths: [640, 750, 800, 828, 1080, 1280, 1600, 2048],
     href: "https://github.com/AdminGodZ/AdminSearch",
+    liveUrl: "https://search.admingod.ch",
   },
   {
     name: "AetherZ",
@@ -53,6 +55,7 @@ const projects = [
     image: aeralythImage,
     imageWidths: [640, 750, 800, 828, 1024],
     href: "https://github.com/AdminGodZ/Aeralyth",
+    liveUrl: "https://cloud.admingod.ch",
   },
 ];
 
@@ -227,6 +230,12 @@ const stack = [
                   ) : null}
                   <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(10,10,10,0.34)_42%,rgba(10,10,10,0.98)_100%)]" />
                   <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90 dark:bg-white/8" />
+                  {project.liveUrl ? (
+                    <ServiceStatus
+                      url={project.liveUrl}
+                      class="absolute top-4 left-4 z-10"
+                    />
+                  ) : null}
                   <div class="relative z-10 mt-auto flex w-full items-end justify-between gap-5">
                     <div>
                       <h3 class="text-3xl font-black tracking-tight text-black dark:text-white">
