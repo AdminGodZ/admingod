@@ -1,0 +1,251 @@
+<div class="fixed top-0 right-2 z-[1000] h-screen w-3">
+  <button
+    data-scroll-sidebar
+    type="button"
+    aria-label="Scroll position"
+    class="absolute top-0 right-0 w-1.5 rounded-full border-0 p-0 backdrop-blur-[4px] transition-[width,opacity,background-color] duration-[200ms] hover:w-2 bg-[#d9d9d9] dark:bg-[#404040]"
+    style="height: 2.6%; transform: translateY(0); opacity: 0; cursor: default; touch-action: none"
+  ></button>
+</div>
+
+<script>
+  const TRACK_MARGIN = 6;
+  const VISIBILITY_TIMEOUT_MS = 900;
+  const IDLE_COLOR = ["bg-[#d9d9d9]", "dark:bg-[#404040]"];
+  const DRAG_COLOR = ["bg-[#c7c7c7]", "dark:bg-[#737373]"];
+
+  type SidebarState = {
+    visible: boolean;
+    dragging: boolean;
+    hovering: boolean;
+    active: boolean;
+  };
+
+  type ScrollMetrics = {
+    viewportHeight: number;
+    scrollable: number;
+    thumbHeightPercent: number;
+    thumbHeightPx: number;
+    thumbTranslateY: number;
+    visible: boolean;
+  };
+
+  function getScrollMetrics(): ScrollMetrics {
+    const doc = document.documentElement;
+    const viewportHeight = window.innerHeight;
+    const fullHeight = doc.scrollHeight;
+    const visible = fullHeight - viewportHeight > 4;
+    const scrollable = Math.max(1, fullHeight - viewportHeight);
+    const scrollTop = window.scrollY || doc.scrollTop;
+
+    const rawHeight = (viewportHeight / fullHeight) * 100;
+    const thumbHeightPercent = Math.min(7, Math.max(2.6, rawHeight));
+    const thumbHeightPx = (thumbHeightPercent / 100) * viewportHeight;
+    const maxTrackY = Math.max(
+      0,
+      viewportHeight - TRACK_MARGIN * 2 - thumbHeightPx,
+    );
+    const progress = Math.min(1, Math.max(0, scrollTop / scrollable));
+    const thumbTranslateY = TRACK_MARGIN + maxTrackY * progress;
+
+    return {
+      viewportHeight,
+      scrollable,
+      thumbHeightPercent,
+      thumbHeightPx,
+      thumbTranslateY,
+      visible,
+    };
+  }
+
+  function startScrollSidebar(thumb: HTMLButtonElement) {
+    const state: SidebarState = {
+      visible: false,
+      dragging: false,
+      hovering: false,
+      active: false,
+    };
+    let metrics: ScrollMetrics | null = null;
+    let activePointerId: number | null = null;
+    let dragStartY = 0;
+    let dragStartThumbY = 0;
+    let latestPointerY = 0;
+    let dragFrame = 0;
+    let updateFrame = 0;
+    let hideTimer: number | null = null;
+    let previousUserSelect = "";
+    let previousWebkitUserSelect = "";
+    let previousScrollBehavior = "";
+
+    const render = () => {
+      const shouldShow =
+        state.visible && (state.dragging || state.hovering || state.active);
+      thumb.style.opacity = shouldShow ? "1" : "0";
+      thumb.classList.remove(...(state.dragging ? IDLE_COLOR : DRAG_COLOR));
+      thumb.classList.add(...(state.dragging ? DRAG_COLOR : IDLE_COLOR));
+    };
+
+    const setState = (changes: Partial<SidebarState>) => {
+      let changed = false;
+
+      for (const key of Object.keys(changes) as (keyof SidebarState)[]) {
+        const value = changes[key];
+        if (value !== undefined && state[key] !== value) {
+          state[key] = value;
+          changed = true;
+        }
+      }
+
+      if (changed) render();
+    };
+
+    const applyThumbMetrics = (next: ScrollMetrics) => {
+      metrics = next;
+      thumb.style.height = `${next.thumbHeightPercent}%`;
+      thumb.style.transform = `translateY(${next.thumbTranslateY}px)`;
+    };
+
+    const clearHideTimer = () => {
+      if (hideTimer !== null) {
+        window.clearTimeout(hideTimer);
+        hideTimer = null;
+      }
+    };
+
+    const scheduleHide = () => {
+      clearHideTimer();
+      hideTimer = window.setTimeout(() => {
+        if (state.dragging || state.hovering) return;
+        setState({ active: false });
+      }, VISIBILITY_TIMEOUT_MS);
+    };
+
+    const restoreDragStyles = () => {
+      document.body.style.userSelect = previousUserSelect;
+      document.body.style.webkitUserSelect = previousWebkitUserSelect;
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    };
+
+    const update = () => {
+      updateFrame = 0;
+      const next = getScrollMetrics();
+      applyThumbMetrics(next);
+      setState({ visible: next.visible });
+    };
+
+    const requestUpdate = () => {
+      if (updateFrame || state.dragging) return;
+      updateFrame = window.requestAnimationFrame(update);
+    };
+
+    const applyDragPosition = () => {
+      dragFrame = 0;
+
+      const current = metrics ?? getScrollMetrics();
+      const maxTrackY = Math.max(
+        0,
+        current.viewportHeight - TRACK_MARGIN * 2 - current.thumbHeightPx,
+      );
+      const deltaY = latestPointerY - dragStartY;
+      const nextThumbY = Math.min(
+        TRACK_MARGIN + maxTrackY,
+        Math.max(TRACK_MARGIN, dragStartThumbY + deltaY),
+      );
+      const progress =
+        maxTrackY > 0 ? (nextThumbY - TRACK_MARGIN) / maxTrackY : 0;
+
+      thumb.style.transform = `translateY(${nextThumbY}px)`;
+      window.scrollTo(0, progress * current.scrollable);
+    };
+
+    const finishDragging = (event: PointerEvent) => {
+      if (!state.dragging || event.pointerId !== activePointerId) return;
+
+      event.preventDefault();
+
+      if (dragFrame) {
+        window.cancelAnimationFrame(dragFrame);
+        applyDragPosition();
+      }
+
+      if (thumb.hasPointerCapture(event.pointerId)) {
+        thumb.releasePointerCapture(event.pointerId);
+      }
+
+      activePointerId = null;
+      restoreDragStyles();
+      setState({ dragging: false, active: true });
+      scheduleHide();
+    };
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        setState({ active: true });
+
+        if (!state.dragging) {
+          scheduleHide();
+          requestUpdate();
+        }
+      },
+      { passive: true },
+    );
+    window.addEventListener("resize", requestUpdate);
+
+    thumb.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+
+      event.preventDefault();
+      clearHideTimer();
+
+      const next = getScrollMetrics();
+      applyThumbMetrics(next);
+      activePointerId = event.pointerId;
+      dragStartY = event.clientY;
+      latestPointerY = event.clientY;
+      dragStartThumbY = next.thumbTranslateY;
+      previousUserSelect = document.body.style.userSelect;
+      previousWebkitUserSelect = document.body.style.webkitUserSelect;
+      previousScrollBehavior = document.documentElement.style.scrollBehavior;
+      document.body.style.userSelect = "none";
+      document.body.style.webkitUserSelect = "none";
+      document.documentElement.style.scrollBehavior = "auto";
+      thumb.setPointerCapture(event.pointerId);
+
+      setState({ dragging: true, active: true, visible: true });
+    });
+
+    thumb.addEventListener("pointermove", (event) => {
+      if (!state.dragging || event.pointerId !== activePointerId) return;
+
+      event.preventDefault();
+      latestPointerY = event.clientY;
+
+      if (!dragFrame) {
+        dragFrame = window.requestAnimationFrame(applyDragPosition);
+      }
+    });
+
+    thumb.addEventListener("pointerup", finishDragging);
+    thumb.addEventListener("pointercancel", finishDragging);
+
+    thumb.addEventListener("mouseenter", () => {
+      clearHideTimer();
+      setState({ hovering: true, active: true });
+    });
+
+    thumb.addEventListener("mouseleave", () => {
+      setState({ hovering: false });
+      scheduleHide();
+    });
+
+    thumb.addEventListener("dragstart", (event) => event.preventDefault());
+
+    requestUpdate();
+  }
+
+  const thumb = document.querySelector<HTMLButtonElement>(
+    "[data-scroll-sidebar]",
+  );
+  if (thumb) startScrollSidebar(thumb);
+</script>

@@ -1,6 +1,6 @@
 ---
 import { ArrowLeft, Mail, Send } from "lucide-react";
-import VoidParticleField from "@/components/portfolio/void-particle-field";
+import VoidParticleField from "@/components/portfolio/void-particle-field.astro";
 import Layout from "@/layouts/layout.astro";
 
 const contactEmail = "tim.held@pm.me";
@@ -13,7 +13,7 @@ const contactEmail = "tim.held@pm.me";
   <main class="contact-page">
     <div class="contact-backdrop portfolio-void-bg" aria-hidden="true"></div>
     <div class="contact-particles" aria-hidden="true">
-      <VoidParticleField client:load className="h-full w-full" />
+      <VoidParticleField class="h-full w-full" />
     </div>
 
     <div class="contact-frame">
