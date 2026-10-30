@@ -4,6 +4,7 @@
 // pass behind the logo as they travel around the back of a ring.
 import { Image } from "astro:assets";
 import adminGodLogo from "@/assets/admingod_dark_transparent.png";
+import whiteLogo from "@/assets/admingod_white_transparent.png";
 
 interface Props {
   items: {
@@ -52,11 +53,12 @@ const orbitItems = items.map((item, index) => {
       draggable="false"
       class="stack-orbit__logo dark:hidden"
     />
-    <img
-      src="/admingod_white_transparent.png"
+    <Image
+      src={whiteLogo}
       alt=""
-      width="1254"
-      height="1254"
+      width={420}
+      widths={[280, 420, 560, 840]}
+      sizes="(min-width: 1280px) 300px, 24vw"
       loading="lazy"
       decoding="async"
       draggable="false"
