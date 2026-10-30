@@ -1,0 +1,69 @@
+---
+// The hero logo in its light- and dark-theme variants for one breakpoint.
+// The hero renders one of these per breakpoint and hides the other with CSS,
+// but hidden eager images still download. While `hiddenMedia` matches, each
+// <picture> swaps in an inline blank image, so visitors only fetch the logos
+// at the breakpoint they are actually on.
+import { getImage } from "astro:assets";
+import darkLogo from "@/assets/admingod_dark_transparent.png";
+import whiteLogo from "@/assets/admingod_white_transparent.png";
+
+interface Props {
+  hiddenMedia: string;
+  width: number;
+  widths: number[];
+  sizes: string;
+  class: string;
+  lightClass: string;
+  darkClass: string;
+}
+
+const {
+  hiddenMedia,
+  width,
+  widths,
+  sizes,
+  class: className,
+  lightClass,
+  darkClass,
+} = Astro.props;
+
+const blankImage =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+const variants = await Promise.all(
+  [
+    { src: darkLogo, variantClass: lightClass },
+    { src: whiteLogo, variantClass: darkClass },
+  ].map(async ({ src, variantClass }) => ({
+    image: await getImage({
+      src,
+      width,
+      height: width,
+      widths,
+    }),
+    variantClass,
+  })),
+);
+---
+
+{
+  variants.map(({ image, variantClass }) => (
+    <picture class="contents">
+      <source media={hiddenMedia} srcset={blankImage} />
+      <img
+        src={image.src}
+        srcset={image.srcSet.attribute}
+        sizes={sizes}
+        width={width}
+        height={width}
+        alt="AdminGod logo"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        draggable="false"
+        class:list={[className, variantClass]}
+      />
+    </picture>
+  ))
+}
