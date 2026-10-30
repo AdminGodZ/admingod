@@ -1,0 +1,183 @@
+---
+// Live reachability pill for a self-hosted service. The browser pings the
+// service with an opaque no-cors request, so any HTTP response counts as
+// reachable and the round trip is shown as latency.
+interface Props {
+  url: string;
+  class?: string;
+}
+
+const { url, class: className } = Astro.props;
+const host = new URL(url).host;
+---
+
+<span
+  data-service-status={url}
+  data-state="checking"
+  title={`Live status of ${host}`}
+  class:list={["service-status", className]}
+>
+  <span class="service-status__dot" aria-hidden="true"></span>
+  <span data-service-status-label>Checking</span>
+  <span data-service-status-latency class="service-status__latency"></span>
+</span>
+
+<style>
+  .service-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 1.75rem;
+    padding: 0 0.7rem;
+    border: 1px solid rgb(0 0 0 / 8%);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 72%);
+    color: rgb(0 0 0 / 72%);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    backdrop-filter: blur(10px);
+    font-variant-numeric: tabular-nums;
+    --dot-color: rgb(0 0 0 / 28%);
+  }
+
+  .service-status[data-state="up"] {
+    --dot-color: #16a34a;
+  }
+
+  .service-status[data-state="down"] {
+    --dot-color: #dc2626;
+  }
+
+  :global(html.dark) .service-status {
+    border-color: rgb(255 255 255 / 12%);
+    background: rgb(0 0 0 / 52%);
+    color: rgb(255 255 255 / 76%);
+    --dot-color: rgb(255 255 255 / 32%);
+  }
+
+  :global(html.dark) .service-status[data-state="up"] {
+    --dot-color: #4ade80;
+  }
+
+  :global(html.dark) .service-status[data-state="down"] {
+    --dot-color: #f87171;
+  }
+
+  .service-status__dot {
+    position: relative;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--dot-color);
+  }
+
+  .service-status__dot::after {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    content: "";
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .service-status[data-state="up"] .service-status__dot::after {
+      animation: service-status-pulse 2.4s cubic-bezier(0.16, 1, 0.3, 1)
+        infinite;
+    }
+
+    .service-status[data-state="checking"] .service-status__dot {
+      animation: service-status-blink 1s ease-in-out infinite alternate;
+    }
+  }
+
+  .service-status__latency:empty {
+    display: none;
+  }
+
+  .service-status__latency {
+    opacity: 0.6;
+  }
+
+  @keyframes service-status-pulse {
+    from {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+
+    70%,
+    to {
+      opacity: 0;
+      transform: scale(3.2);
+    }
+  }
+
+  @keyframes service-status-blink {
+    to {
+      opacity: 0.35;
+    }
+  }
+</style>
+
+<script>
+  const timeoutMs = 8000;
+  const intervalMs = 60_000;
+
+  const ping = async (url: string) => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+    const started = performance.now();
+
+    try {
+      await fetch(url, {
+        mode: "no-cors",
+        cache: "no-store",
+        signal: controller.signal,
+      });
+      return Math.round(performance.now() - started);
+    } catch {
+      return null;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
+
+  const render = (pill: HTMLElement, latency: number | null) => {
+    const label = pill.querySelector("[data-service-status-label]");
+    const latencyText = pill.querySelector("[data-service-status-latency]");
+
+    pill.dataset.state = latency === null ? "down" : "up";
+    if (label) label.textContent = latency === null ? "Offline" : "Live";
+    if (latencyText) {
+      latencyText.textContent = latency === null ? "" : `${latency} ms`;
+    }
+  };
+
+  const pills = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-service-status]"),
+  );
+  const urls = [
+    ...new Set(pills.map((pill) => pill.dataset.serviceStatus ?? "")),
+  ].filter(Boolean);
+
+  const checkAll = async () => {
+    if (document.visibilityState !== "visible") return;
+
+    await Promise.all(
+      urls.map(async (url) => {
+        const latency = await ping(url);
+
+        for (const pill of pills) {
+          if (pill.dataset.serviceStatus === url) render(pill, latency);
+        }
+      }),
+    );
+  };
+
+  if (urls.length > 0) {
+    checkAll();
+    window.setInterval(checkAll, intervalMs);
+    document.addEventListener("visibilitychange", checkAll);
+  }
+</script>
