@@ -1,6 +1,5 @@
 ---
 import { Moon, Sun } from "lucide-react";
-import VoidPageTransition from "@/components/portfolio/void-page-transition.astro";
 import "@/styles/global.css";
 
 interface Props {
@@ -55,7 +54,6 @@ const canonicalUrl = Astro.site
   </head>
   <body class="antialiased">
     <slot />
-    <VoidPageTransition />
     <button
       type="button"
       data-theme-toggle
