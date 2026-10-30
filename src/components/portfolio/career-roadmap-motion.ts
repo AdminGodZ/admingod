@@ -11,7 +11,6 @@ type RoadmapGeometry = {
   academicSpineEnd: number;
   academicSpineLeadEnd: number;
   academicSpineLeadStart: number;
-  academicSpineStart: number;
   academicStepLeads: number[];
   desktop: boolean;
   futureBranchEnd: number;
@@ -21,10 +20,8 @@ type RoadmapGeometry = {
   futureMobileAcademicLead: number;
   futureMobileItLead: number;
   futureMobilePoliceLead: number;
-  futureSpineEnd: number;
   futureSpineLeadEnd: number;
   futureSpineLeadStart: number;
-  futureSpineStart: number;
   historyEnd: number;
   historyStart: number;
   junctionCenter: number;
@@ -519,7 +516,6 @@ if (section) {
           academicSpineEnd,
           academicSpineLeadEnd,
           academicSpineLeadStart,
-          academicSpineStart,
           academicStepLeads,
           desktop,
           futureBranchEnd,
@@ -529,10 +525,8 @@ if (section) {
           futureMobileAcademicLead,
           futureMobileItLead,
           futureMobilePoliceLead,
-          futureSpineEnd,
           futureSpineLeadEnd,
           futureSpineLeadStart,
-          futureSpineStart,
           historyEnd: historyEnd.y,
           historyStart: historyStart.y,
           junctionCenter: junctionRect.centerY,
@@ -540,8 +534,6 @@ if (section) {
           policeContinuationLeadEnd,
           policeContinuationLeadStart,
         };
-
-        section.classList.add("roadmap-motion-ready");
       } finally {
         section.classList.remove("roadmap-measuring");
       }
@@ -758,7 +750,6 @@ if (section) {
       window.removeEventListener("scroll", requestRender);
       window.removeEventListener("resize", requestMeasure);
       resizeObserver?.disconnect();
-      section.classList.remove("roadmap-motion-ready");
     };
   }
 }

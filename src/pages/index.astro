@@ -210,83 +210,55 @@ const stack = [
           </div>
 
           <div class="grid gap-5 lg:grid-cols-3">
-            {projects.map((project, index) => {
-              const cardClassName = `project-card group relative flex min-h-[230px] overflow-hidden rounded-lg border border-black/8 bg-white p-6 text-left no-underline shadow-[0_18px_38px_rgba(0,0,0,0.08)] ring-1 ring-white/80 dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 sm:min-h-[260px] ${project.href ? "cursor-pointer" : ""}`;
-              const revealStyle = `--scroll-reveal-delay: ${index * 90}ms`;
-              const cardContent = (
-                <>
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={`${project.name} project visual`}
-                      width={800}
-                      widths={project.imageWidths}
-                      layout="constrained"
-                      loading="lazy"
-                      decoding="async"
-                      draggable="false"
-                      sizes="(min-width: 1024px) 33vw, 100vw"
-                      class="project-card-image project-card-image-uniform pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.92] dark:opacity-60"
-                    />
-                  ) : null}
-                  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(10,10,10,0.34)_42%,rgba(10,10,10,0.98)_100%)]" />
-                  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90 dark:bg-white/8" />
-                  {project.liveUrl ? (
-                    <ServiceStatus
-                      url={project.liveUrl}
-                      class="absolute top-4 left-4 z-10"
-                    />
-                  ) : null}
-                  <div class="relative z-10 mt-auto flex w-full items-end justify-between gap-5">
-                    <div>
-                      <h3 class="text-3xl font-black tracking-tight text-black dark:text-white">
-                        {project.name}
-                      </h3>
-                      {project.name !== "Under Construction" ? (
-                        <p class="mt-1 text-sm font-semibold text-black/56 dark:text-white/58">
-                          {project.type}
-                        </p>
-                      ) : null}
-                      <p class="sr-only">
-                        {project.description} {project.meta}
-                      </p>
-                    </div>
-                    {project.name !== "Under Construction" ? (
-                      <ArrowUpRight
-                        className="project-card-arrow h-5 w-5 shrink-0 text-black dark:text-white"
-                        aria-hidden="true"
-                      />
-                    ) : null}
+            {projects.map((project, index) => (
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+                data-scroll-reveal="card"
+                style={`--scroll-reveal-delay: ${index * 90}ms`}
+                class="project-card group relative flex min-h-[230px] cursor-pointer overflow-hidden rounded-lg border border-black/8 bg-white p-6 text-left no-underline shadow-[0_18px_38px_rgba(0,0,0,0.08)] ring-1 ring-white/80 dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 sm:min-h-[260px]"
+                aria-label={`Open ${project.name} on GitHub`}
+              >
+                <Image
+                  src={project.image}
+                  alt={`${project.name} project visual`}
+                  width={800}
+                  widths={project.imageWidths}
+                  layout="constrained"
+                  loading="lazy"
+                  decoding="async"
+                  draggable="false"
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  class="project-card-image project-card-image-uniform pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.92] dark:opacity-60"
+                />
+                <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(10,10,10,0.34)_42%,rgba(10,10,10,0.98)_100%)]" />
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90 dark:bg-white/8" />
+                {project.liveUrl ? (
+                  <ServiceStatus
+                    url={project.liveUrl}
+                    class="absolute top-4 left-4 z-10"
+                  />
+                ) : null}
+                <div class="relative z-10 mt-auto flex w-full items-end justify-between gap-5">
+                  <div>
+                    <h3 class="text-3xl font-black tracking-tight text-black dark:text-white">
+                      {project.name}
+                    </h3>
+                    <p class="mt-1 text-sm font-semibold text-black/56 dark:text-white/58">
+                      {project.type}
+                    </p>
+                    <p class="sr-only">
+                      {project.description} {project.meta}
+                    </p>
                   </div>
-                </>
-              );
-
-              if (project.href) {
-                return (
-                  <a
-                    href={project.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    data-scroll-reveal="card"
-                    style={revealStyle}
-                    class={cardClassName}
-                    aria-label={`Open ${project.name} on GitHub`}
-                  >
-                    {cardContent}
-                  </a>
-                );
-              }
-
-              return (
-                <article
-                  data-scroll-reveal="card"
-                  style={revealStyle}
-                  class={cardClassName}
-                >
-                  {cardContent}
-                </article>
-              );
-            })}
+                  <ArrowUpRight
+                    className="project-card-arrow h-5 w-5 shrink-0 text-black dark:text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>
