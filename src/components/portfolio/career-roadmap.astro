@@ -171,7 +171,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
             dottedRouteNames.map((routeName) => (
               <mask
                 id={`roadmap-mask-${routeName}`}
-                class="roadmap-route-reveal-mask"
                 maskUnits="userSpaceOnUse"
                 x="-100"
                 y="-100"
@@ -534,10 +533,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     list-style: none;
   }
 
-  .roadmap-timeline::before {
-    content: none;
-  }
-
   .roadmap-step {
     position: relative;
     display: grid;
@@ -628,10 +623,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     color: #fff;
   }
 
-  .roadmap-step-current::after {
-    content: none;
-  }
-
   .roadmap-future {
     position: relative;
     z-index: 1;
@@ -672,22 +663,10 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     padding-left: 1.5rem;
   }
 
-  .roadmap-future-paths::before {
-    content: none;
-  }
-
-  .roadmap-future-paths::after {
-    content: none;
-  }
-
   .roadmap-future-branch {
     position: relative;
     z-index: 1;
     min-width: 0;
-  }
-
-  .roadmap-future-branch::before {
-    content: none;
   }
 
   .roadmap-future-card {
@@ -708,10 +687,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
   .roadmap-police-continuation {
     position: relative;
     margin-top: 2.75rem;
-  }
-
-  .roadmap-police-continuation::before {
-    content: none;
   }
 
   .roadmap-special-unit {
@@ -759,14 +734,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     z-index: 1;
   }
 
-  .roadmap-academic-branch::before {
-    content: none;
-  }
-
-  .roadmap-academic-branch::after {
-    content: none;
-  }
-
   .roadmap-academic-root {
     --roadmap-reveal-opacity: 1;
     --roadmap-reveal-y: 0px;
@@ -792,16 +759,8 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
     list-style: none;
   }
 
-  .academic-tree::before {
-    content: none;
-  }
-
   .academic-step {
     position: relative;
-  }
-
-  .academic-step::before {
-    content: none;
   }
 
   .academic-step > div {
@@ -866,12 +825,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
       gap: 1.5rem;
     }
 
-    .roadmap-timeline::before {
-      bottom: -5.4rem;
-      left: 50%;
-      translate: -0.5px 0;
-    }
-
     .roadmap-step {
       grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr);
       gap: 0;
@@ -893,10 +846,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
       margin-left: 0.25rem;
     }
 
-    .roadmap-step-current::after {
-      content: none;
-    }
-
     .roadmap-future {
       margin-top: 4.5rem;
     }
@@ -909,21 +858,6 @@ const allRouteNames = [...solidRouteNames, ...dottedRouteNames];
       margin-top: 4rem;
       padding-top: 2rem;
       padding-left: 0;
-    }
-
-    .roadmap-future-paths::before,
-    .roadmap-future-paths::after {
-      content: none;
-    }
-
-    .roadmap-future-branch::before,
-    .roadmap-future-branch::after {
-      content: none;
-    }
-
-    .roadmap-academic-branch::before,
-    .roadmap-academic-branch::after {
-      content: none;
     }
   }
 

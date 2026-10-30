@@ -12,7 +12,6 @@ const contactEmail = "tim.held@pm.me";
 >
   <main class="contact-page">
     <div class="contact-backdrop portfolio-void-bg" aria-hidden="true"></div>
-    <div class="contact-grid portfolio-void-grid" aria-hidden="true"></div>
     <div class="contact-particles" aria-hidden="true">
       <VoidParticleField client:load className="h-full w-full" />
     </div>
@@ -229,7 +228,7 @@ const contactEmail = "tim.held@pm.me";
       status.textContent = "Opening your email app…";
     }
 
-    window.location.href = `mailto:tim.held@pm.me?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    window.location.href = `${form.getAttribute("action")}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
   });
 </script>
 
@@ -246,7 +245,6 @@ const contactEmail = "tim.held@pm.me";
   }
 
   .contact-backdrop,
-  .contact-grid,
   .contact-particles {
     position: absolute;
     inset: 0;
@@ -255,11 +253,6 @@ const contactEmail = "tim.held@pm.me";
 
   .contact-backdrop {
     z-index: -3;
-  }
-
-  .contact-grid {
-    z-index: -2;
-    opacity: 0.88;
   }
 
   .contact-particles {
