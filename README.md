@@ -13,11 +13,7 @@
 
 <br />
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.webp" />
-  <source media="(prefers-color-scheme: light)" srcset="docs/hero-light.webp" />
-  <img src="docs/hero-dark.webp" alt="The AdminGod hero: the AdminGod wordmark next to the AdminGod logo over a starfield" width="900" />
-</picture>
+<img src="docs/hero.webp" alt="The AdminGod hero: the AdminGod wordmark next to the AdminGod logo" width="900" />
 
 <br /><br />
 
