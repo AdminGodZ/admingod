@@ -11,9 +11,12 @@ import {
   siTailwindcss,
   siTypescript,
 } from "simple-icons";
-import adminSearchImage from "@/assets/adminsearch_transparent.png";
-import aeralythImage from "@/assets/aeralyth_transparent.png";
-import aetherzImage from "@/assets/aetherz_transparent.png";
+import adminSearchLogo from "@/assets/projects/adminsearch.svg";
+import aeralythLogo from "@/assets/projects/aeralyth.svg";
+import aetherzLogo from "@/assets/projects/aetherz.svg";
+import broadsideLogo from "@/assets/projects/broadside.svg";
+import regicideLogo from "@/assets/projects/regicide.svg";
+import theGameLogo from "@/assets/projects/the-game.png";
 import CareerRoadmap from "@/components/portfolio/career-roadmap.astro";
 import HeroLogo from "@/components/portfolio/hero-logo.astro";
 import { HeroTextReveal } from "@/components/portfolio/hero-text-reveal";
@@ -32,8 +35,7 @@ const projects = [
     description:
       "A self-made search engine experience built around private, practical search, with SearXNG running as the underlying engine.",
     meta: "Next.js / SearXNG",
-    image: adminSearchImage,
-    imageWidths: [640, 750, 800, 828, 1080, 1280, 1600, 2048],
+    logo: adminSearchLogo,
     href: "https://github.com/AdminGodZ/AdminSearch",
     liveUrl: "https://search.admingod.ch",
   },
@@ -43,8 +45,7 @@ const projects = [
     description:
       "A self-programmed chess engine focused on move search, board evaluation, and building the core engine logic from scratch.",
     meta: "Custom Engine / Chess AI",
-    image: aetherzImage,
-    imageWidths: [640, 750, 800, 828, 1080, 1280, 1600, 2048],
+    logo: aetherzLogo,
     href: "https://github.com/AdminGodZ/AetherZ",
   },
   {
@@ -53,12 +54,49 @@ const projects = [
     description:
       "A self-hosted cloud platform with encrypted vaults, file permissions, and storage backed by a Next.js frontend and Actix Web backend.",
     meta: "Next.js / Actix Web",
-    image: aeralythImage,
-    imageWidths: [640, 750, 800, 828, 1024],
+    logo: aeralythLogo,
     href: "https://github.com/AdminGodZ/Aeralyth",
     liveUrl: "https://cloud.admingod.ch",
   },
+  {
+    name: "Broadside",
+    type: "Battleship engine",
+    description:
+      "A Battleship engine that weighs every possible fleet layout on every shot, with exact Bayesian inference, endgame search, and a WebAssembly build that plays in the browser.",
+    meta: "Rust / WebAssembly",
+    logo: broadsideLogo,
+    logoFit: "tile",
+    href: "https://github.com/AdminGodZ/Broadside",
+  },
+  {
+    name: "Regicide",
+    type: "Checkers engine",
+    description:
+      "An 8x8 English checkers engine written in C++26 with an embedded opening book, built to compete with Cake and KingsRow.",
+    meta: "C++26 / Checkers AI",
+    logo: regicideLogo,
+    href: "https://github.com/AdminGodZ/Regicide",
+  },
+  {
+    name: "The Game",
+    type: "Co-op card game",
+    description:
+      "A multiplayer web version of the cooperative card game The Game, with party codes, persistent game state, pause and resume, and custom rule extensions.",
+    meta: "Next.js / Convex",
+    logo: theGameLogo,
+    href: "https://github.com/AdminGodZ/The-Game",
+    liveUrl: "https://the-game-th.vercel.app",
+  },
 ];
+
+// Logos drawn on their own square tile are shown whole; the rest fill the card.
+const logoFitClass = (project: (typeof projects)[number]) =>
+  [
+    "pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.92] dark:opacity-60",
+    "logoFit" in project && project.logoFit === "tile"
+      ? "project-card-image-tile"
+      : "project-card-image-uniform",
+  ].join(" ");
 
 const stack = [
   { name: "Next.js", type: "Framework", icon: siNextdotjs },
@@ -174,29 +212,41 @@ const stack = [
             <div class="h-px flex-1 bg-black/10 dark:bg-white/12" />
           </div>
 
-          <div class="grid gap-5 lg:grid-cols-3">
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
               <a
                 href={project.href}
                 target="_blank"
                 rel="noreferrer"
                 data-scroll-reveal="card"
-                style={`--scroll-reveal-delay: ${index * 90}ms`}
+                style={`--scroll-reveal-delay: ${(index % 3) * 90}ms`}
                 class="project-card group relative flex min-h-[230px] cursor-pointer overflow-hidden rounded-lg border border-black/8 bg-white p-6 text-left no-underline shadow-[0_18px_38px_rgba(0,0,0,0.08)] ring-1 ring-white/80 dark:border-white/10 dark:bg-[#0a0a0a] dark:shadow-[0_18px_38px_rgba(0,0,0,0.6)] dark:ring-white/8 sm:min-h-[260px]"
                 aria-label={`Open ${project.name} on GitHub`}
               >
-                <Image
-                  src={project.image}
-                  alt={`${project.name} project visual`}
-                  width={800}
-                  widths={project.imageWidths}
-                  layout="constrained"
-                  loading="lazy"
-                  decoding="async"
-                  draggable="false"
-                  sizes="(min-width: 1024px) 33vw, 100vw"
-                  class="project-card-image project-card-image-uniform pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.92] dark:opacity-60"
-                />
+                {project.logo.format === "svg" ? (
+                  <img
+                    src={project.logo.src}
+                    alt={`${project.name} logo`}
+                    width={project.logo.width}
+                    height={project.logo.height}
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                    class:list={["project-card-image", logoFitClass(project)]}
+                  />
+                ) : (
+                  <Image
+                    src={project.logo}
+                    alt={`${project.name} logo`}
+                    width={800}
+                    widths={[400, 640, 800, 1200]}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                    class:list={["project-card-image", logoFitClass(project)]}
+                  />
+                )}
                 <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.96)_100%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(10,10,10,0.34)_42%,rgba(10,10,10,0.98)_100%)]" />
                 <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/90 dark:bg-white/8" />
                 {project.liveUrl ? (
