@@ -439,35 +439,74 @@ body {
     transform: translateY(-7px);
   }
 
-  .project-card-image {
+  /*
+   * The logo sits in a square stage on the right of the card. A blurred,
+   * saturated copy behind it tints the card with the logo's own colours, so
+   * monochrome and coloured logos read as one set. --logo-scale evens out how
+   * much of its canvas each logo fills.
+   */
+  .project-card-stage {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    width: 8.5rem;
+    aspect-ratio: 1;
+    pointer-events: none;
+    user-select: none;
+    transform: translateY(-66%);
+  }
+
+  @media (min-width: 40rem) {
+    .project-card-stage {
+      right: 1.5rem;
+      width: 11.5rem;
+      transform: translateY(-57%);
+    }
+  }
+
+  .project-card-glow,
+  .project-card-logo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     transition:
       transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 650ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform;
+      opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 650ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .project-card:hover .project-card-image {
-    opacity: 0.98;
-    transform: scale(1.045);
+  .project-card-glow {
+    opacity: 0.28;
+    filter: blur(40px) saturate(1.8);
+    transform: scale(calc(var(--logo-scale) * 1.45));
   }
 
-  .project-card-image-uniform {
-    object-fit: contain;
-    transform: translateY(1.25rem) scale(1.35);
+  .project-card-logo {
+    filter: drop-shadow(0 18px 26px rgb(15 23 42 / 16%));
+    transform: scale(var(--logo-scale));
   }
 
-  .project-card:hover .project-card-image-uniform {
-    transform: translateY(1.25rem) scale(1.39);
+  .dark .project-card-glow {
+    opacity: 0.42;
   }
 
-  /* Logos drawn on their own square tile stay whole instead of bleeding past the card. */
-  .project-card-image-tile {
-    object-fit: contain;
-    transform: translateY(0.75rem) scale(0.86);
+  .dark .project-card-logo {
+    filter: drop-shadow(0 18px 30px rgb(0 0 0 / 55%));
   }
 
-  .project-card:hover .project-card-image-tile {
-    transform: translateY(0.75rem) scale(0.89);
+  .project-card:hover .project-card-glow {
+    opacity: 0.5;
+    transform: scale(calc(var(--logo-scale) * 1.6));
+  }
+
+  .project-card:hover .project-card-logo {
+    transform: translateY(-6px) scale(calc(var(--logo-scale) * 1.06));
+  }
+
+  .dark .project-card:hover .project-card-glow {
+    opacity: 0.62;
   }
 
   .project-card-arrow {
