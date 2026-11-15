@@ -36,7 +36,8 @@ const projects = [
       "A self-made search engine experience built around private, practical search, with SearXNG running as the underlying engine.",
     meta: "Next.js / SearXNG",
     logo: adminSearchLogo,
-    logoScale: 1.5,
+    logoScale: 0.82,
+    logoInvertsInDark: true,
     href: "https://github.com/AdminGodZ/AdminSearch",
     liveUrl: "https://search.admingod.ch",
   },
@@ -47,7 +48,8 @@ const projects = [
       "A self-programmed chess engine focused on move search, board evaluation, and building the core engine logic from scratch.",
     meta: "Custom Engine / Chess AI",
     logo: aetherzLogo,
-    logoScale: 1.5,
+    logoScale: 0.82,
+    logoInvertsInDark: true,
     href: "https://github.com/AdminGodZ/AetherZ",
   },
   {
@@ -220,7 +222,10 @@ const stack = [
                 aria-label={`Open ${project.name} on GitHub`}
               >
                 <div
-                  class="project-card-stage"
+                  class:list={[
+                    "project-card-stage",
+                    project.logoInvertsInDark && "project-card-stage--mono",
+                  ]}
                   style={`--logo-scale: ${project.logoScale}`}
                   aria-hidden="true"
                 >
