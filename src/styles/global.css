@@ -496,13 +496,14 @@ body {
     filter: drop-shadow(0 18px 30px rgb(0 0 0 / 55%));
   }
 
-  /* Black-only marks turn white on the dark cards. */
-  .dark .project-card-stage--mono .project-card-glow {
-    filter: invert(1) blur(40px);
+  /* Logos with a dark-theme version show the one that fits the theme. */
+  .project-logo-dark,
+  .dark .project-logo-light {
+    display: none;
   }
 
-  .dark .project-card-stage--mono .project-card-logo {
-    filter: invert(1) drop-shadow(0 18px 30px rgb(0 0 0 / 55%));
+  .dark .project-logo-dark {
+    display: block;
   }
 
   .project-card:hover .project-card-glow {

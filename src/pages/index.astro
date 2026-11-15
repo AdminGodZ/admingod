@@ -11,10 +11,14 @@ import {
   siTypescript,
 } from "simple-icons";
 import adminSearchLogo from "@/assets/projects/adminsearch.svg";
+import adminSearchLogoDark from "@/assets/projects/adminsearch-dark.svg";
 import aeralythLogo from "@/assets/projects/aeralyth.svg";
+import aeralythLogoDark from "@/assets/projects/aeralyth-dark.svg";
 import aetherzLogo from "@/assets/projects/aetherz.svg";
+import aetherzLogoDark from "@/assets/projects/aetherz-dark.svg";
 import broadsideLogo from "@/assets/projects/broadside.svg";
 import regicideLogo from "@/assets/projects/regicide.svg";
+import regicideLogoDark from "@/assets/projects/regicide-dark.svg";
 import theGameLogo from "@/assets/projects/the-game.png";
 import CareerRoadmap from "@/components/portfolio/career-roadmap.astro";
 import HeroLogo from "@/components/portfolio/hero-logo.astro";
@@ -36,8 +40,8 @@ const projects = [
       "A self-made search engine experience built around private, practical search, with SearXNG running as the underlying engine.",
     meta: "Next.js / SearXNG",
     logo: adminSearchLogo,
+    logoDark: adminSearchLogoDark,
     logoScale: 0.82,
-    logoInvertsInDark: true,
     href: "https://github.com/AdminGodZ/AdminSearch",
     liveUrl: "https://search.admingod.ch",
   },
@@ -48,8 +52,8 @@ const projects = [
       "A self-programmed chess engine focused on move search, board evaluation, and building the core engine logic from scratch.",
     meta: "Custom Engine / Chess AI",
     logo: aetherzLogo,
+    logoDark: aetherzLogoDark,
     logoScale: 0.82,
-    logoInvertsInDark: true,
     href: "https://github.com/AdminGodZ/AetherZ",
   },
   {
@@ -59,6 +63,7 @@ const projects = [
       "A self-hosted cloud platform with encrypted vaults, file permissions, and storage backed by a Next.js frontend and Actix Web backend.",
     meta: "Next.js / Actix Web",
     logo: aeralythLogo,
+    logoDark: aeralythLogoDark,
     logoScale: 0.9,
     href: "https://github.com/AdminGodZ/Aeralyth",
     liveUrl: "https://cloud.admingod.ch",
@@ -80,7 +85,8 @@ const projects = [
       "An 8x8 English checkers engine written in C++26 with an embedded opening book, built to compete with Cake and KingsRow.",
     meta: "C++26 / Checkers AI",
     logo: regicideLogo,
-    logoScale: 1.5,
+    logoDark: regicideLogoDark,
+    logoScale: 0.82,
     href: "https://github.com/AdminGodZ/Regicide",
   },
   {
@@ -222,20 +228,19 @@ const stack = [
                 aria-label={`Open ${project.name} on GitHub`}
               >
                 <div
-                  class:list={[
-                    "project-card-stage",
-                    project.logoInvertsInDark && "project-card-stage--mono",
-                  ]}
+                  class="project-card-stage"
                   style={`--logo-scale: ${project.logoScale}`}
                   aria-hidden="true"
                 >
                   <ProjectLogo
                     logo={project.logo}
+                    logoDark={project.logoDark}
                     alt=""
                     class="project-card-glow"
                   />
                   <ProjectLogo
                     logo={project.logo}
+                    logoDark={project.logoDark}
                     alt=""
                     class="project-card-logo"
                   />
