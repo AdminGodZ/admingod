@@ -460,6 +460,16 @@ body {
     transform: translateY(1.25rem) scale(1.39);
   }
 
+  /* Logos drawn on their own square tile stay whole instead of bleeding past the card. */
+  .project-card-image-tile {
+    object-fit: contain;
+    transform: translateY(0.75rem) scale(0.86);
+  }
+
+  .project-card:hover .project-card-image-tile {
+    transform: translateY(0.75rem) scale(0.89);
+  }
+
   .project-card-arrow {
     transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   }
