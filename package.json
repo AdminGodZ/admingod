@@ -13,18 +13,18 @@
     "format": "biome format --write"
   },
   "dependencies": {
-    "@astrojs/react": "^7.1.4",
+    "@astrojs/react": "^7.1.9",
     "@tailwindcss/vite": "^4.3.5",
-    "astro": "^7.4.7",
+    "astro": "^7.4.12",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.70.0",
+    "lucide-react": "^1.73.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "simple-icons": "^16.26.0",
+    "simple-icons": "^16.37.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.6",
+    "@biomejs/biome": "^2.6.7",
     "@types/node": "^26.6.6",
     "@types/react": "^19",
     "@types/react-dom": "^19.2.5",
