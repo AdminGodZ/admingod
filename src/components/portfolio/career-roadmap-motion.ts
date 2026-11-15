@@ -56,6 +56,12 @@ if (section && stage && frame) {
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
+  const finePointer = window.matchMedia(
+    "(hover: hover) and (pointer: fine)",
+  ).matches;
+  const cards = chapters.map((chapter) =>
+    chapter.querySelector<HTMLElement>(".roadmap-card"),
+  );
 
   let current = -1;
   let target = 0;
@@ -76,6 +82,35 @@ if (section && stage && frame) {
     const whole = Math.floor(units);
     const handover = clamp((units - whole - (1 - HANDOVER)) / HANDOVER);
     return whole + easeInOut(handover);
+  };
+
+  const resetCard = (card: HTMLElement | null) => {
+    if (!card) return;
+    card.style.setProperty("--spot-opacity", "0");
+    card.style.setProperty("--tilt-x", "0deg");
+    card.style.setProperty("--tilt-y", "0deg");
+  };
+
+  // The card on show leans a little towards the pointer and lights up under it.
+  const onPointerMove = (event: PointerEvent) => {
+    const card = cards[activeIndex];
+    if (!card) return;
+    const box = card.getBoundingClientRect();
+    const x = (event.clientX - box.left) / box.width;
+    const y = (event.clientY - box.top) / box.height;
+    if (x < 0 || x > 1 || y < 0 || y > 1) {
+      resetCard(card);
+      return;
+    }
+    card.style.setProperty("--spot-x", `${(x * 100).toFixed(1)}%`);
+    card.style.setProperty("--spot-y", `${(y * 100).toFixed(1)}%`);
+    card.style.setProperty("--spot-opacity", "1");
+    card.style.setProperty("--tilt-x", `${((0.5 - y) * 4).toFixed(2)}deg`);
+    card.style.setProperty("--tilt-y", `${((x - 0.5) * 6).toFixed(2)}deg`);
+  };
+
+  const onPointerLeave = () => {
+    cards.forEach(resetCard);
   };
 
   const render = (progress: number) => {
@@ -122,6 +157,8 @@ if (section && stage && frame) {
       const drawn = easeInOut(clamp((forkProgress - start) / REVEAL_LENGTH));
       element.style.setProperty("--draw-offset", (1 - drawn).toFixed(4));
     });
+    // Once the lines are drawn, sparks start running down them.
+    fork?.classList.toggle("is-flowing", forkProgress > 0.4);
 
     fill?.style.setProperty(
       "--roadmap-fill",
@@ -131,6 +168,10 @@ if (section && stage && frame) {
     const nextActive = Math.round(position);
     if (nextActive !== activeIndex) {
       activeIndex = nextActive;
+      chapters.forEach((chapter, index) => {
+        chapter.classList.toggle("is-current", index === nextActive);
+      });
+      cards.forEach(resetCard);
       stops.forEach((stop, index) => {
         stop.classList.toggle("is-reached", index < nextActive);
         stop.classList.toggle("is-active", index === nextActive);
@@ -145,6 +186,10 @@ if (section && stage && frame) {
           nextActive < chapterCount
             ? `${pad(nextActive + 1)} / ${pad(chapterCount)}`
             : "What's next";
+        // Restart the tick so the new value rolls in.
+        counter.classList.remove("is-ticking");
+        void counter.offsetWidth;
+        counter.classList.add("is-ticking");
       }
     }
   };
@@ -255,6 +300,10 @@ if (section && stage && frame) {
   };
 
   layout();
+  if (finePointer && !reduceMotion) {
+    stage.addEventListener("pointermove", onPointerMove, { passive: true });
+    stage.addEventListener("pointerleave", onPointerLeave);
+  }
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onResize, { passive: true });
   const resizeObserver =
@@ -267,6 +316,8 @@ if (section && stage && frame) {
     window.cancelAnimationFrame(resizeFrame);
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onResize);
+    stage.removeEventListener("pointermove", onPointerMove);
+    stage.removeEventListener("pointerleave", onPointerLeave);
     resizeObserver?.disconnect();
     stops.forEach((stop) => {
       stop.removeEventListener("click", onStopClick);
